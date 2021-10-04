@@ -24,6 +24,8 @@ class GithubApiClient(
     private val urlProvider: UrlProvider = UrlProvider(),
     private val logger: Logger = SentryLogger()
 ) {
+    private val baseUrl = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-"
+
     private val client = OkHttpClient()
     private val latestResults: HashMap<String, ReleasesResponse?> = hashMapOf()
 
@@ -37,24 +39,27 @@ class GithubApiClient(
 
     @Throws(IOException::class)
     suspend fun getAssetsListDownloadUrl(repo: String): String = withContext(Dispatchers.IO) {
-        val result = latestResults[repo] ?: queryLatestRelease(repo)
+        /*val result = latestResults[repo] ?: queryLatestRelease(repo)
 
-        return@withContext result.assets.find { it.name == "${ulaFiles.getArchType()}-assets.txt" }!!.downloadUrl
+        return@withContext result.assets.find { it.name == "${ulaFiles.getArchType()}-assets.txt" }!!.downloadUrl*/
+        return@withContext baseUrl + "$repo/latest/" + "${ulaFiles.getArchType()}-assets.txt"
     }
 
     @Throws(IOException::class)
     suspend fun getLatestReleaseVersion(repo: String): String = withContext(Dispatchers.IO) {
-        val result = latestResults[repo] ?: queryLatestRelease(repo)
+        /*val result = latestResults[repo] ?: queryLatestRelease(repo)
 
-        return@withContext result.tag
+        return@withContext result.tag*/
+        "v0.0.3"
     }
 
     @Throws(IOException::class)
     suspend fun getAssetEndpoint(assetType: String, repo: String): String = withContext(Dispatchers.IO) {
-        val result = latestResults[repo] ?: queryLatestRelease(repo)
+        /*val result = latestResults[repo] ?: queryLatestRelease(repo)
         val assetName = "${ulaFiles.getArchType()}-$assetType"
 
-        return@withContext result.assets.find { it.name == assetName }!!.downloadUrl
+        return@withContext result.assets.find { it.name == assetName }!!.downloadUrl*/
+        return@withContext baseUrl + "$repo/latest/" + "${ulaFiles.getArchType()}-$assetType"
     }
 
     // Query latest release data and memoize results.

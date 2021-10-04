@@ -19,7 +19,8 @@ class GithubAppsFetcher(
     private operator fun <T> List<T>.component7() = get(6)
 
     private val branch = "master" // Base off different support branches for testing.
-    private val baseUrl = "https://github.com/CypherpunkArmory/UserLAnd-Assets-Support/raw/$branch/apps"
+    //private val baseUrl = "https://github.com/CypherpunkArmory/UserLAnd-Assets-Support/raw/$branch/apps"
+    private val baseUrl = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-Support/apps"
 
     @Throws(IOException::class)
     suspend fun fetchAppsList(): List<App> = withContext(Dispatchers.IO) {

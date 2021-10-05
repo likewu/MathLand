@@ -1,5 +1,6 @@
 package tech.ula.model.repositories
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import tech.ula.model.entities.Asset
@@ -83,7 +84,7 @@ class AssetRepository(
 
     private suspend fun fetchAssetList(assetType: String): List<Asset> = withContext(Dispatchers.IO) {
         val downloadUrl = githubApiClient.getAssetsListDownloadUrl(assetType)
-
+        Log.e("downloadUrl", downloadUrl) 
         val inputStream = httpStream.fromUrl(downloadUrl)
         val reader = BufferedReader(InputStreamReader(inputStream))
 
@@ -93,6 +94,9 @@ class AssetRepository(
             if (filename == "assets.txt") return@forEachLine
             assetList.add(Asset(filename, assetType))
         }
+        //if (assetList.isEmpty()) {
+            //Log.e("downloadUrl", downloadUrl)
+        //}
 
         reader.close()
 

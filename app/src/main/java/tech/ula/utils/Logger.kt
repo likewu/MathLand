@@ -84,6 +84,7 @@ class SentryLogger : Logger {
                 ))
                 .build()
         Sentry.getContext().recordBreadcrumb(breadcrumb)
+        //Log.e("ExceptionBreadcrumb", err.stackTrace.message)
     }
 
     override fun sendIllegalStateLog(state: IllegalState) {

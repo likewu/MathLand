@@ -24,7 +24,7 @@ class GithubApiClient(
     private val urlProvider: UrlProvider = UrlProvider(),
     private val logger: Logger = SentryLogger()
 ) {
-    private val baseUrl = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-"
+    private val baseUrl = "https://gitlab.com/api/v4/projects/30140969/packages/generic/UserLAnd-Assets-"
 
     private val client = OkHttpClient()
     private val latestResults: HashMap<String, ReleasesResponse?> = hashMapOf()
@@ -42,7 +42,7 @@ class GithubApiClient(
         /*val result = latestResults[repo] ?: queryLatestRelease(repo)
 
         return@withContext result.assets.find { it.name == "${ulaFiles.getArchType()}-assets.txt" }!!.downloadUrl*/
-        return@withContext baseUrl + "$repo/latest/" + "${ulaFiles.getArchType()}-assets.txt"
+        return@withContext baseUrl + repo.substring(0, 1).toUpperCase() + repo.substring(1) + "/latest/" + "${ulaFiles.getArchType()}-assets.txt"
     }
 
     @Throws(IOException::class)
@@ -59,7 +59,7 @@ class GithubApiClient(
         val assetName = "${ulaFiles.getArchType()}-$assetType"
 
         return@withContext result.assets.find { it.name == assetName }!!.downloadUrl*/
-        return@withContext baseUrl + "$repo/latest/" + "${ulaFiles.getArchType()}-$assetType"
+        return@withContext baseUrl + repo.substring(0, 1).toUpperCase() + repo.substring(1) + "/latest/" + "${ulaFiles.getArchType()}-$assetType"
     }
 
     // Query latest release data and memoize results.

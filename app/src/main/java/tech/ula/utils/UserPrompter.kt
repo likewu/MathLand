@@ -88,7 +88,7 @@ interface UserPrompter {
             }
         }
 
-        savedViewGroup.addView(view)
+        //savedViewGroup.addView(view)
     }
 }
 
@@ -151,7 +151,7 @@ class UserFeedbackPrompter(private val activity: Activity, private val viewGroup
     }
 
     private val sendGithubIntent = {
-        val githubURI = "https://github.com/CypherpunkArmory/UserLAnd"
+        val githubURI = "https://github.com/likewu/MathLand"
         val intent = Intent("android.intent.action.VIEW", Uri.parse(githubURI))
         activity.startActivity(intent)
     }

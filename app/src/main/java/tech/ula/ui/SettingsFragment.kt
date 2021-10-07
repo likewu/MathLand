@@ -60,24 +60,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
             } else
                 ss = ""
         } catch (e: IOException) {
-            Toast.makeText(context, "Could not open the propertiey file termux.properties.", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Could not read the propertiey file termux.properties.", Toast.LENGTH_LONG).show()
             Log.e("settings", "Error loading termux.properties", e)
         }
 
-        val termuxpropertiesPreference: Preference = findPreference("pref_termux_properties")!!
+        val termuxpropertiesPreference: EditTextPreference = findPreference<EditTextPreference>("pref_termux_properties")!!
         //termuxpropertiesPreference.isPersistent = false
-        termuxpropertiesPreference.setDefaultValue(ss)
+        termuxpropertiesPreference.setText(ss)
 
         val termuxpropertiessavePreference: Preference = findPreference("pref_termux_properties_save")!!
         termuxpropertiessavePreference.setOnPreferenceClickListener {
             try {
-                val in1 = FileOutputStream(propsFile)
+                propsFile.writeText(termuxpropertiesPreference.getText(), Charset.forName("utf-8"))
+                /*val in1 = FileOutputStream(propsFile)
                 in1.writer(Charset.forName("utf-8")).use {
                     var n: Int
-                    it.writeText(termuxpropertiesPreference.toString().toCharArray())
-                }
+                    it.write(termuxpropertiesPreference.getText().toCharArray())
+                }*/
+                Toast.makeText(context, "save termux.properties ok.", Toast.LENGTH_LONG).show()
             } catch (e: IOException) {
-                Toast.makeText(context, "Could not open the propertiey file termux.properties.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Could not write the propertiey file termux.properties.", Toast.LENGTH_LONG).show()
                 Log.e("settings", "Error writing termux.properties", e)
             }
             true

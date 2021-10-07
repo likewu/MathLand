@@ -45,4 +45,19 @@
             android:title="@string/pref_proot_delete_debug_file_title"
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="termux"
+        android:key="pref_termux_category"
+        app:iconSpaceReserved="false">
+        <EditTextPreference
+            android:key="pref_termux_properties"
+            android:title="termux.properties"
+            android:singleLine="false"
+            app:persistent="false"
+            app:iconSpaceReserved="false"/>
+        <Preference
+            android:key="pref_termux_properties_save"
+            android:title="Save termux.properties"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
 </PreferenceScreen>

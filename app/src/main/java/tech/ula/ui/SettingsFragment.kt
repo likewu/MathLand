@@ -4,12 +4,22 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import tech.ula.R
-import androidx.preference.PreferenceFragmentCompat
+import android.util.Log
+import android.widget.Toast
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceFragmentCompat
+import tech.ula.R
 import tech.ula.utils.ProotDebugLogger
 import tech.ula.utils.UlaFiles
 import tech.ula.utils.defaultSharedPreferences
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.nio.charset.Charset
+import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -18,6 +28,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         ProotDebugLogger(activity!!.defaultSharedPreferences, ulaFiles)
     }
 
+    @UseExperimental(ExperimentalStdlibApi::class)
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
@@ -26,6 +37,66 @@ class SettingsFragment : PreferenceFragmentCompat() {
             prootDebugLogger.deleteLogs()
             true
         }
+
+        val home_path = context!!.filesDir.absolutePath + "/home"
+        var propsFile: File = File(home_path + "/.termux/termux.properties")
+        //if (!propsFile.exists()) propsFile = File(home_path + "/.config/termux/termux.properties")
+
+        val termuxDirectory = File("$home_path/.termux")
+        if (!termuxDirectory.exists()) termuxDirectory.mkdirs()
+
+        var ss: String? = null
+        try {
+            if (propsFile.isFile && propsFile.canRead()) {
+                val in1 = FileInputStream(propsFile)
+                in1.reader(Charset.forName("utf-8")).use {
+                    val buffer = CharArray(1000)
+                    var n: Int
+                    while (it.read(buffer) != -1) {
+                        Log.i("settings", "read ${buffer.concatToString()} .")
+                    }
+                    ss = buffer.concatToString()
+                }
+            } else
+                ss = ""
+        } catch (e: IOException) {
+            Toast.makeText(context, "Could not open the propertiey file termux.properties.", Toast.LENGTH_LONG).show()
+            Log.e("settings", "Error loading termux.properties", e)
+        }
+
+        val termuxpropertiesPreference: Preference = findPreference("pref_termux_properties")!!
+        //termuxpropertiesPreference.isPersistent = false
+        termuxpropertiesPreference.setDefaultValue(ss)
+
+        val termuxpropertiessavePreference: Preference = findPreference("pref_termux_properties_save")!!
+        termuxpropertiessavePreference.setOnPreferenceClickListener {
+            try {
+                val in1 = FileOutputStream(propsFile)
+                in1.writer(Charset.forName("utf-8")).use {
+                    var n: Int
+                    it.writeText(termuxpropertiesPreference.toString().toCharArray())
+                }
+            } catch (e: IOException) {
+                Toast.makeText(context, "Could not open the propertiey file termux.properties.", Toast.LENGTH_LONG).show()
+                Log.e("settings", "Error writing termux.properties", e)
+            }
+            true
+        }
+
+        /*val context = preferenceManager.context
+        val screen = preferenceManager.createPreferenceScreen(context)
+        
+        val category1 = PreferenceCategory(context)
+        category1.title = "termux"
+        category1.key = "pref_termux_category"
+        category1.isIconSpaceReserved = false
+
+        val termuxproperties = EditTextPreference(context)
+        termuxproperties.title = "termux.properties"
+        termuxproperties.setDefaultValue(ss)
+
+        screen.addPreference(category1)
+        category1.addPreference(termuxproperties)*/
     }
 
     override fun setDivider(divider: Drawable?) {

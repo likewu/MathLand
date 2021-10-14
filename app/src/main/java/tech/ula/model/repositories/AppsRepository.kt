@@ -40,6 +40,7 @@ class AppsRepository(
         refreshStatus.postValue(RefreshStatus.ACTIVE)
         val jobs = mutableListOf<Job>()
         try {
+            appsDao.delAllApps()
             remoteAppsSource.fetchAppsList().forEach { app ->
                 jobs.add(scope.launch {
                     if (app.category.toLowerCase(Locale.ENGLISH) == "distribution") distributionsList.add(app.name)

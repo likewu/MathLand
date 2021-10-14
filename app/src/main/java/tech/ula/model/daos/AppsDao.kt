@@ -22,4 +22,7 @@ interface AppsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertApp(application: App)
+
+    @Query("delete from apps")
+    fun delAllApps()
 }

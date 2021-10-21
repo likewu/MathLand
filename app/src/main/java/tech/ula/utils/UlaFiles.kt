@@ -2,9 +2,9 @@ package tech.ula.utils
 
 import android.content.Context
 import android.os.Build
+import android.os.Environment
 import android.system.Os
 import java.io.File
-import java.lang.NullPointerException
 
 class UlaFiles(
     context: Context,
@@ -23,12 +23,23 @@ class UlaFiles(
         File(sdCardScopedDir, "storage")
     } else null
 
+    var sdCardExist = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    val sdCard = Environment.getExternalStorageDirectory()
+    val mathlandDir = File(sdCard, "MathLand")
+
     val busybox = File(supportDir, "busybox")
     val proot = File(supportDir, "proot")
 
     init {
         emulatedUserDir.mkdirs()
         sdCardUserDir?.mkdirs()
+
+        if (sdCardExist)
+        {
+            if (mathlandDir.exists() == false) {
+                mathlandDir.mkdirs()
+            }
+        }
 
         setupLinks()
     }

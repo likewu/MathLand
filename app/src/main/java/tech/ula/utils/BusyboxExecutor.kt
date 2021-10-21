@@ -171,7 +171,8 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
         val externalStorageBinding = ulaFiles.sdCardUserDir?.run {
             "-b ${this.absolutePath}:/storage/sdcard"
         } ?: ""
-        val bindings = "$emulatedStorageBinding $externalStorageBinding"
+        val mathlandStorageBinding = "-b ${ulaFiles.mathlandDir.absolutePath}:/storage/MathLand"
+        val bindings = "$emulatedStorageBinding $externalStorageBinding $mathlandStorageBinding"
         return hashMapOf(
                 "LD_LIBRARY_PATH" to ulaFiles.supportDir.absolutePath,
                 "LIB_PATH" to ulaFiles.supportDir.absolutePath,

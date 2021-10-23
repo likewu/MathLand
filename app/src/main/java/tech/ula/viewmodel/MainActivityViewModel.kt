@@ -409,10 +409,17 @@ class MainActivityViewModel(
         appsStartupFsm.submitEvent(event, this)
     }
 
-    private fun submitSessionStartupEvent(event: SessionStartupEvent) {
+    public fun submitSessionStartupEvent(event: SessionStartupEvent) {
         val breadcrumb = UlaBreadcrumb(className, BreadcrumbType.SubmittedEvent, "$event")
         logger.addBreadcrumb(breadcrumb)
         sessionStartupFsm.submitEvent(event, this)
+    }
+
+    fun submitCodeRun(codeLang: String?, filePath: String?) {
+        val event = SyncDatabaseEntries(lastSelectedApp, lastSelectedSession, lastSelectedFilesystem)
+        val breadcrumb = UlaBreadcrumb(className, BreadcrumbType.SubmittedEvent, "$event")
+        logger.addBreadcrumb(breadcrumb)
+        appsStartupFsm.submitEvent(event, this)
     }
 }
 

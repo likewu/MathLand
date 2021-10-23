@@ -234,6 +234,15 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
         billingManager.querySubPurchases()
         billingManager.queryInAppPurchases()
         viewModel.handleOnResume()
+
+        val bundle = this.getIntent().getExtras();
+        if (bundle != null){
+            val codeLang = bundle.getString("CODE_LANGUAGE");
+            val filePath = bundle.getString("CODE_FILE_PATH");
+            Toast.makeText(this, "run " + filePath, Toast.LENGTH_LONG).show()
+            //startSession(Session(id = -1, name = "UNSELECTED", filesystemId = -1, geometry = "/storage/MathLand"+filePath))
+            viewModel.submitCodeRun(codeLang, filePath)
+        }
     }
 
     override fun onDestroy() {

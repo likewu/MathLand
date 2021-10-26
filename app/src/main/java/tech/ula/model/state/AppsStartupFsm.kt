@@ -112,6 +112,23 @@ class AppsStartupFsm(
         }
     }
 
+    fun codeRun(event: AppsStartupEvent, coroutineScope: CoroutineScope) = coroutineScope.launch {
+        val eventBreadcrumb = UlaBreadcrumb(className, BreadcrumbType.ReceivedEvent, "Event: $event State: ${state.value}")
+        logger.addBreadcrumb(eventBreadcrumb)
+
+        //fetchDatabaseEntries((event as AppSelected).app)
+        state.postValue(FetchingDatabaseEntries)
+        try {
+            val appsFilesystem = findAppsFilesystem((event as AppSelected).app)
+            val appSession = findAppSession((event as AppSelected).app, appsFilesystem.id)
+            //state.postValue(DatabaseEntriesFetched(appsFilesystem, appSession))
+            //state.postValue(AppScriptCopySucceeded)
+            //state.postValue(AppCodeRun)
+        } catch (err: Exception) {
+            state.postValue(DatabaseEntriesFetchFailed)
+        }
+    }
+
     private suspend fun setServiceType(appSession: Session, serviceType: ServiceType) = withContext(Dispatchers.IO) {
         appSession.serviceType = serviceType
         sessionDao.updateSession(appSession)

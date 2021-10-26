@@ -116,6 +116,15 @@ class SessionStartupFsm(
         }
     }
 
+    fun codeRun(event: SessionStartupEvent, coroutineScope: CoroutineScope) = coroutineScope.launch {
+        val eventBreadcrumb = UlaBreadcrumb(className, BreadcrumbType.ReceivedEvent, "Event: $event State: ${state.value}")
+        logger.addBreadcrumb(eventBreadcrumb)
+
+        val filesystem = findFilesystemForSession((event as SessionSelected).session)
+        state.postValue(SessionIsReadyForPreparation((event as SessionSelected).session, filesystem))
+        //state.postValue(AppCodeRun)
+    }
+
     private fun findFilesystemForSession(session: Session): Filesystem {
         return filesystems.find { filesystem -> filesystem.id == session.filesystemId }!!
     }

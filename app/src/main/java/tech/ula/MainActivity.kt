@@ -19,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.appcompat.app.AppCompatActivity
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -231,17 +232,19 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
 
     override fun onResume() {
         super.onResume()
-        billingManager.querySubPurchases()
-        billingManager.queryInAppPurchases()
-        viewModel.handleOnResume()
+        //billingManager.querySubPurchases()
+        //billingManager.queryInAppPurchases()
 
-        val bundle = this.getIntent().getExtras();
+        val bundle = this.getIntent().getExtras()
         if (bundle != null){
             val codeLang = bundle.getString("CODE_LANGUAGE");
             val filePath = bundle.getString("CODE_FILE_PATH");
             Toast.makeText(this, "run " + filePath, Toast.LENGTH_LONG).show()
             //startSession(Session(id = -1, name = "UNSELECTED", filesystemId = -1, geometry = "/storage/MathLand"+filePath))
             viewModel.submitCodeRun(codeLang, filePath)
+            //Log.e("aaaaa", bundle.toString())
+        } else {
+            viewModel.handleOnResume()
         }
     }
 

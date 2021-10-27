@@ -47,10 +47,10 @@ class GithubApiClient(
 
     @Throws(IOException::class)
     suspend fun getLatestReleaseVersion(repo: String): String = withContext(Dispatchers.IO) {
-        /*val result = latestResults[repo] ?: queryLatestRelease(repo)
+        val result = latestResults[repo] ?: queryLatestRelease(repo)
 
-        return@withContext result.tag*/
-        "v0.0.3"
+        return@withContext result.tag
+        //"v0.0.3"
     }
 
     @Throws(IOException::class)
@@ -66,8 +66,10 @@ class GithubApiClient(
     @Throws(IOException::class, UnknownHostException::class)
     private suspend fun queryLatestRelease(repo: String): ReleasesResponse = withContext(Dispatchers.IO) {
         val releaseToUse = getReleaseToUseForRepo(repo)
-        val base = urlProvider.getBaseUrl()
-        val url = base + "repos/CypherpunkArmory/UserLAnd-Assets-$repo/releases/$releaseToUse"
+        //val base = urlProvider.getBaseUrl()
+        //val url = base + "repos/CypherpunkArmory/UserLAnd-Assets-$repo/releases/$releaseToUse"
+        val base = baseUrl
+        val url = base + repo.substring(0, 1).toUpperCase() + repo.substring(1) + "/$releaseToUse/manifest.json"
         val moshi = Moshi.Builder().build()
         val adapter = moshi.adapter(ReleasesResponse::class.java)
         val request = Request.Builder()

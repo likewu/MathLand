@@ -416,19 +416,23 @@ class MainActivityViewModel(
     }
 
     fun submitCodeRun(codeLang: String?, filePath: String?) {
-        //lastSelectedApp = App("Julia", "Math", "debian", true, true)
-        lastSelectedApp = App("Debian", "Math", "debian", true, true)
+        /*lastSelectedApp = App("debian", "Math", "debian", true, true)
         lastSelectedSession = unselectedSession
         lastSelectedFilesystem = unselectedFilesystem
+        appsStartupFsm.codeRun(AppSelected(lastSelectedApp), this)*/
 
-        appsStartupFsm.codeRun(AppSelected(lastSelectedApp), this)
+        lastSelectedSession = Session(id = 0, name = "debian", filesystemId = 0, filesystemName = "debian", isAppsSession = true)
         sessionStartupFsm.codeRun(SessionSelected(lastSelectedSession), this)
+
+        //state.postValue(SessionCanBeStarted(lastSelectedSession))
 
         val event = SyncDatabaseEntries(lastSelectedApp, lastSelectedSession, lastSelectedFilesystem)
         //val event = AppDatabaseEntriesSynced(lastSelectedApp, lastSelectedSession, lastSelectedFilesystem)
         val breadcrumb = UlaBreadcrumb(className, BreadcrumbType.SubmittedEvent, "$event")
         logger.addBreadcrumb(breadcrumb)
 
+        appsAreWaitingForSelection = true
+        sessionsAreWaitingForSelection = true
         //appsStartupFsm.submitEvent(event, this)
     }
 }

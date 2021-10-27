@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tech.ula.model.entities.App
 import tech.ula.model.entities.Asset
 import tech.ula.model.entities.Filesystem
 import tech.ula.model.entities.Session
@@ -19,6 +20,7 @@ class SessionStartupFsm(
     ulaDatabase: UlaDatabase,
     private val assetRepository: AssetRepository,
     private val filesystemManager: FilesystemManager,
+    private val ulaFiles: UlaFiles,
     private val assetDownloader: AssetDownloader,
     private val storageCalculator: StorageCalculator,
     private val logger: Logger = SentryLogger()
@@ -120,9 +122,54 @@ class SessionStartupFsm(
         val eventBreadcrumb = UlaBreadcrumb(className, BreadcrumbType.ReceivedEvent, "Event: $event State: ${state.value}")
         logger.addBreadcrumb(eventBreadcrumb)
 
-        val filesystem = findFilesystemForSession((event as SessionSelected).session)
-        state.postValue(SessionIsReadyForPreparation((event as SessionSelected).session, filesystem))
-        //state.postValue(AppCodeRun)
+        val session1 = (event as SessionSelected).session
+
+        val filesystem = findAppsFilesystem("debian")
+        val potentialAppSession1 = findAppSession("debian", filesystem.id)
+
+        val credentialsAreSet = filesystem.defaultUsername.isNotEmpty() &&
+                filesystem.defaultPassword.isNotEmpty() &&
+                filesystem.defaultVncPassword.isNotEmpty()
+        /*if (!credentialsAreSet) {
+            state.postValue(AppsFilesystemRequiresCredentials(filesystem))
+            return@launch
+        }*/
+
+        session1.filesystemId = filesystem.id
+
+        session1.username = filesystem.defaultUsername
+        session1.password = filesystem.defaultPassword
+
+        session1.filesystemName = potentialAppSession1.filesystemName
+        session1.serviceType = potentialAppSession1.serviceType
+        session1.active = potentialAppSession1.active
+
+        //state.postValue(SessionIsReadyForPreparation(session1, filesystem))
+        handleSessionSelected(session1)
+    }
+
+    private suspend fun findAppsFilesystem(filesystemType: String): Filesystem = withContext(Dispatchers.IO) {
+        val potentialAppFilesystem = filesystemDao.findAppsFilesystemByType(filesystemType)
+
+        if (potentialAppFilesystem.isEmpty()) {
+            val deviceArchitecture = ulaFiles.getArchType()
+            val fsToInsert = Filesystem(0, name = "apps", archType = deviceArchitecture,
+                distributionType = filesystemType, isAppsFilesystem = true)
+            filesystemDao.insertFilesystem(fsToInsert)
+        }
+
+        return@withContext filesystemDao.findAppsFilesystemByType(filesystemType).first()
+    }
+
+    private suspend fun findAppSession(filesystemType: String, filesystemId: Long): Session = withContext(Dispatchers.IO) {
+        val potentialAppSession = sessionDao.findAppsSession(filesystemType)
+
+        if (potentialAppSession.isEmpty()) {
+            val sessionToInsert = Session(id = 0, name = filesystemType, filesystemId = filesystemId, isAppsSession = true)
+            sessionDao.insertSession(sessionToInsert)
+        }
+
+        return@withContext sessionDao.findAppsSession(filesystemType).first()
     }
 
     private fun findFilesystemForSession(session: Session): Filesystem {

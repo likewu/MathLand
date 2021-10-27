@@ -121,7 +121,7 @@ class AppsStartupFsm(
         try {
             val appsFilesystem = findAppsFilesystem((event as AppSelected).app)
             val appSession = findAppSession((event as AppSelected).app, appsFilesystem.id)
-            //state.postValue(DatabaseEntriesFetched(appsFilesystem, appSession))
+            state.postValue(DatabaseEntriesFetched(appsFilesystem, appSession))
             //state.postValue(AppScriptCopySucceeded)
             //state.postValue(AppCodeRun)
         } catch (err: Exception) {

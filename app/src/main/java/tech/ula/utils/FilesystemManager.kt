@@ -142,4 +142,23 @@ class FilesystemManager(
             throw exception
         }
     }
+
+    @Throws(IOException::class)
+    fun writeCodeRunToRequiredLocation(appFilesystem: Filesystem, codeLang: String?, filePath: String?) {
+        // Profile.d scripts execute in alphabetical order.
+        val fileNameToForceAppScriptToExecuteLast = "zzzzzzzzzzzzzzzz.sh"
+        val appFilesystemProfileDDir = File("$filesDirPath/${appFilesystem.id}/etc/profile.d")
+        val appScriptProfileDTarget = File("$appFilesystemProfileDDir/$fileNameToForceAppScriptToExecuteLast")
+
+        try {
+            appFilesystemProfileDDir.mkdirs()
+            appScriptProfileDTarget.writeText("SCRIPT_PATH=\$(realpath \${BASH_SOURCE})\n" +
+                    "sudo rm -f \$SCRIPT_PATH" +
+                    "$codeLang /storage/MathLand$filePath")
+        } catch (err: Exception) {
+            val exception = IOException()
+            logger.addExceptionBreadcrumb(exception)
+            throw exception
+        }
+    }
 }

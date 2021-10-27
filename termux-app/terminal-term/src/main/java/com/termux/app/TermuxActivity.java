@@ -66,6 +66,9 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -636,6 +639,11 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
             }
             switchToSession(newSession);
             getDrawer().closeDrawers();
+
+            ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutor.schedule(() -> {
+                newSession.getEmulator().paste("666666\n");
+            }, 5000, TimeUnit.MILLISECONDS);
         }
     }
 

@@ -112,7 +112,7 @@ class AppsStartupFsm(
         }
     }
 
-    fun codeRun(event: AppsStartupEvent, coroutineScope: CoroutineScope) = coroutineScope.launch {
+    fun codeRun(event: AppsStartupEvent, codeLang: String?, filePath: String?, coroutineScope: CoroutineScope) = coroutineScope.launch {
         val eventBreadcrumb = UlaBreadcrumb(className, BreadcrumbType.ReceivedEvent, "Event: $event State: ${state.value}")
         logger.addBreadcrumb(eventBreadcrumb)
 
@@ -196,6 +196,7 @@ object AppScriptCopySucceeded : AppsStartupState()
 object AppScriptCopyFailed : AppsStartupState()
 object SyncingDatabaseEntries : AppsStartupState()
 data class AppDatabaseEntriesSynced(val app: App, val session: Session, val filesystem: Filesystem) : AppsStartupState()
+data class CodeRunUpdatesession(val appsFilesystem: Filesystem, val appSession: Session) : AppsStartupState()
 
 sealed class AppsStartupEvent
 data class AppSelected(val app: App) : AppsStartupEvent()

@@ -138,9 +138,11 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
         val assetDownloader = AssetDownloader(assetPreferences, downloadManagerWrapper, ulaFiles)
 
         val appsStartupFsm = AppsStartupFsm(ulaDatabase, filesystemManager, ulaFiles)
-        val sessionStartupFsm = SessionStartupFsm(ulaDatabase, assetRepository, filesystemManager, ulaFiles, assetDownloader, storageCalculator)
-        ViewModelProviders.of(this, MainActivityViewModelFactory(appsStartupFsm, sessionStartupFsm))
+        val sessionStartupFsm = SessionStartupFsm(ulaDatabase, assetRepository, filesystemManager, ulaFiles, appsStartupFsm, assetDownloader, storageCalculator)
+        val viewModel11 = ViewModelProviders.of(this, MainActivityViewModelFactory(appsStartupFsm, sessionStartupFsm))
                 .get(MainActivityViewModel::class.java)
+        sessionStartupFsm.setViewModel(viewModel11)
+        viewModel11
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -81,6 +81,12 @@ class MainActivityViewModel(
                     lastSelectedSession = update.session
                     lastSelectedFilesystem = update.filesystem
                 }
+                is CodeRunUpdatesession -> {
+                    lastSelectedSession = update.appSession
+                    lastSelectedFilesystem = update.appsFilesystem
+                    state.postValue(FilesystemCredentialsRequired)
+                    return@let
+                }
             }
             handleAppsPreparationState(update)
         } }
@@ -232,6 +238,7 @@ class MainActivityViewModel(
             is AppDatabaseEntriesSynced -> {
                 submitSessionStartupEvent(SessionSelected(lastSelectedSession))
             }
+            is CodeRunUpdatesession -> {}
         }
     }
 
@@ -419,10 +426,10 @@ class MainActivityViewModel(
         /*lastSelectedApp = App("debian", "Math", "debian", true, true)
         lastSelectedSession = unselectedSession
         lastSelectedFilesystem = unselectedFilesystem
-        appsStartupFsm.codeRun(AppSelected(lastSelectedApp), this)*/
+        appsStartupFsm.codeRun(AppSelected(lastSelectedApp), codeLang, filePath, this)*/
 
         lastSelectedSession = Session(id = 0, name = "debian", filesystemId = 0, filesystemName = "debian", isAppsSession = true)
-        sessionStartupFsm.codeRun(SessionSelected(lastSelectedSession), this)
+        sessionStartupFsm.codeRun(SessionSelected(lastSelectedSession), codeLang, filePath, this)
 
         //state.postValue(SessionCanBeStarted(lastSelectedSession))
 

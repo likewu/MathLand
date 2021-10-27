@@ -1,7 +1,9 @@
 package tech.ula.model.state
 
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,6 +16,7 @@ import tech.ula.model.repositories.AssetRepository
 import tech.ula.model.repositories.DownloadMetadata
 import tech.ula.model.repositories.UlaDatabase
 import tech.ula.utils.* // ktlint-disable no-wildcard-imports
+import tech.ula.viewmodel.*
 import java.net.UnknownHostException
 
 class SessionStartupFsm(
@@ -21,6 +24,7 @@ class SessionStartupFsm(
     private val assetRepository: AssetRepository,
     private val filesystemManager: FilesystemManager,
     private val ulaFiles: UlaFiles,
+    private val appsStartupFsm: AppsStartupFsm,
     private val assetDownloader: AssetDownloader,
     private val storageCalculator: StorageCalculator,
     private val logger: Logger = SentryLogger()
@@ -41,6 +45,8 @@ class SessionStartupFsm(
     private val extractionLogger: (String) -> Unit = { line ->
         state.postValue(ExtractingFilesystem(line))
     }
+
+    private lateinit var viewModel: MainActivityViewModel
 
     init {
         activeSessionsLiveData.observeForever {
@@ -64,6 +70,10 @@ class SessionStartupFsm(
     // Exposed for testing purposes. This should not be called during real use cases.
     internal fun setState(newState: SessionStartupState) {
         state.postValue(newState)
+    }
+
+    internal fun setViewModel(viewModel: MainActivityViewModel) {
+        this.viewModel = viewModel
     }
 
     fun sessionsAreActive(): Boolean {
@@ -118,7 +128,7 @@ class SessionStartupFsm(
         }
     }
 
-    fun codeRun(event: SessionStartupEvent, coroutineScope: CoroutineScope) = coroutineScope.launch {
+    fun codeRun(event: SessionStartupEvent, codeLang: String?, filePath: String?, coroutineScope: CoroutineScope) = coroutineScope.launch {
         val eventBreadcrumb = UlaBreadcrumb(className, BreadcrumbType.ReceivedEvent, "Event: $event State: ${state.value}")
         logger.addBreadcrumb(eventBreadcrumb)
 
@@ -130,10 +140,11 @@ class SessionStartupFsm(
         val credentialsAreSet = filesystem.defaultUsername.isNotEmpty() &&
                 filesystem.defaultPassword.isNotEmpty() &&
                 filesystem.defaultVncPassword.isNotEmpty()
-        /*if (!credentialsAreSet) {
-            state.postValue(AppsFilesystemRequiresCredentials(filesystem))
+        if (!credentialsAreSet) {
+            (appsStartupFsm.getState() as MutableLiveData<AppsStartupState>).postValue(CodeRunUpdatesession(filesystem, session1))
+            //(viewModel.getState() as MutableLiveData<State>).postValue(FilesystemCredentialsRequired)
             return@launch
-        }*/
+        }
 
         session1.filesystemId = filesystem.id
 
@@ -143,6 +154,13 @@ class SessionStartupFsm(
         session1.filesystemName = potentialAppSession1.filesystemName
         session1.serviceType = potentialAppSession1.serviceType
         session1.active = potentialAppSession1.active
+
+        try {
+            withContext(Dispatchers.IO) {
+                filesystemManager.writeCodeRunToRequiredLocation(filesystem, codeLang, filePath)
+            }
+        } catch (err: Exception) {
+        }
 
         //state.postValue(SessionIsReadyForPreparation(session1, filesystem))
         handleSessionSelected(session1)

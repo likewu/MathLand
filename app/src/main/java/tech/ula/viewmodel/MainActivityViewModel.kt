@@ -81,12 +81,12 @@ class MainActivityViewModel(
                     lastSelectedSession = update.session
                     lastSelectedFilesystem = update.filesystem
                 }
-                is CodeRunUpdatesession -> {
+                /*is CodeRunUpdatesession -> {
                     lastSelectedSession = update.appSession
                     lastSelectedFilesystem = update.appsFilesystem
                     state.postValue(FilesystemCredentialsRequired)
                     return@let
-                }
+                }*/
             }
             handleAppsPreparationState(update)
         } }
@@ -238,7 +238,7 @@ class MainActivityViewModel(
             is AppDatabaseEntriesSynced -> {
                 submitSessionStartupEvent(SessionSelected(lastSelectedSession))
             }
-            is CodeRunUpdatesession -> {}
+            //is CodeRunUpdatesession -> {}
         }
     }
 
@@ -431,15 +431,8 @@ class MainActivityViewModel(
         lastSelectedSession = Session(id = 0, name = "debian", filesystemId = 0, filesystemName = "debian", isAppsSession = true)
         sessionStartupFsm.codeRun(SessionSelected(lastSelectedSession), codeLang, filePath, this)
 
-        //state.postValue(SessionCanBeStarted(lastSelectedSession))
-
-        val event = SyncDatabaseEntries(lastSelectedApp, lastSelectedSession, lastSelectedFilesystem)
-        //val event = AppDatabaseEntriesSynced(lastSelectedApp, lastSelectedSession, lastSelectedFilesystem)
-        val breadcrumb = UlaBreadcrumb(className, BreadcrumbType.SubmittedEvent, "$event")
-        logger.addBreadcrumb(breadcrumb)
-
-        appsAreWaitingForSelection = true
-        sessionsAreWaitingForSelection = true
+        //appsAreWaitingForSelection = true
+        //sessionsAreWaitingForSelection = true
         //appsStartupFsm.submitEvent(event, this)
     }
 }

@@ -152,9 +152,12 @@ class FilesystemManager(
 
         try {
             appFilesystemProfileDDir.mkdirs()
-            appScriptProfileDTarget.writeText("SCRIPT_PATH=\$(realpath \${BASH_SOURCE})\n" +
-                    "sudo rm -f \$SCRIPT_PATH" +
+            appScriptProfileDTarget.writeText("SCRIPT_PATH=\$(realpath \${BASH_SOURCE})\n\n" +
+                    "sudo rm -f \$SCRIPT_PATH\n\n" +
+                    "PATH=\$PATH:\$HOME/.local/bin\n\n" +
+                    //"echo \${PATH} \${HOME}\n\n" +
                     "$codeLang /storage/MathLand$filePath")
+            //appScriptProfileDTarget.delete()
         } catch (err: Exception) {
             val exception = IOException()
             logger.addExceptionBreadcrumb(exception)

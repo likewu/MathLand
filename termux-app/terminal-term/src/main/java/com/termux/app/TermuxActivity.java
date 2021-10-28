@@ -51,11 +51,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.termux.R;
-import com.termux.terminal.EmulatorDebug;
-import com.termux.terminal.TerminalColors;
-import com.termux.terminal.TerminalSession;
+import com.termux.terminal.*;
 import com.termux.terminal.TerminalSession.SessionChangedCallback;
-import com.termux.terminal.TextStyle;
 import com.termux.view.TerminalView;
 
 import java.io.File;
@@ -638,12 +635,19 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
                 newSession.mSessionName = sessionName;
             }
             switchToSession(newSession);
-            getDrawer().closeDrawers();
 
             ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             scheduledExecutor.schedule(() -> {
-                newSession.getEmulator().paste("666666\n");
-            }, 5000, TimeUnit.MILLISECONDS);
+                TerminalEmulator emulator = newSession.getEmulator();
+                String transcriptText= emulator.getScreen().getTranscriptText();
+                int len = transcriptText.length();
+                String passwordText= transcriptText.substring(len-9, len);
+                //Log.e(EmulatorDebug.LOG_TAG, passwordText);
+                if(passwordText.equals("password:"))
+                    emulator.paste("666666\n");
+            }, 2000, TimeUnit.MILLISECONDS);
+
+            getDrawer().closeDrawers();
         }
     }
 

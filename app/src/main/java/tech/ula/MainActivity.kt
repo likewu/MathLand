@@ -237,12 +237,14 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
         //billingManager.querySubPurchases()
         //billingManager.queryInAppPurchases()
 
-        val bundle = this.getIntent().getExtras()
+        val intent11 = this.getIntent()
+        val bundle = intent11.getExtras()
         if (bundle != null){
             val codeLang = bundle.getString("CODE_LANGUAGE");
             val filePath = bundle.getString("CODE_FILE_PATH");
             Toast.makeText(this, "run " + filePath, Toast.LENGTH_LONG).show()
-            //startSession(Session(id = -1, name = "UNSELECTED", filesystemId = -1, geometry = "/storage/MathLand"+filePath))
+            intent11.removeExtra("CODE_LANGUAGE")
+            intent11.removeExtra("CODE_FILE_PATH")
             viewModel.submitCodeRun(codeLang, filePath)
             //Log.e("aaaaa", bundle.toString())
         } else {

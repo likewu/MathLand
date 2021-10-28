@@ -140,8 +140,9 @@ class SessionStartupFsm(
         val credentialsAreSet = filesystem.defaultUsername.isNotEmpty() &&
                 filesystem.defaultPassword.isNotEmpty() &&
                 filesystem.defaultVncPassword.isNotEmpty()
-        if (!credentialsAreSet) {
-            (appsStartupFsm.getState() as MutableLiveData<AppsStartupState>).postValue(CodeRunUpdatesession(filesystem, session1))
+        if (credentialsAreSet==false) {
+            //(appsStartupFsm.getState() as MutableLiveData<AppsStartupState>).postValue(CodeRunUpdatesession(filesystem, session1))
+            viewModel.submitAppSelection(App("debian", "Math", "debian", true, true))
             //(viewModel.getState() as MutableLiveData<State>).postValue(FilesystemCredentialsRequired)
             return@launch
         }

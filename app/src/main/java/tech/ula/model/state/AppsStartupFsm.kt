@@ -196,7 +196,7 @@ object AppScriptCopySucceeded : AppsStartupState()
 object AppScriptCopyFailed : AppsStartupState()
 object SyncingDatabaseEntries : AppsStartupState()
 data class AppDatabaseEntriesSynced(val app: App, val session: Session, val filesystem: Filesystem) : AppsStartupState()
-data class CodeRunUpdatesession(val appsFilesystem: Filesystem, val appSession: Session) : AppsStartupState()
+//data class CodeRunUpdatesession(val appsFilesystem: Filesystem, val appSession: Session) : AppsStartupState()
 
 sealed class AppsStartupEvent
 data class AppSelected(val app: App) : AppsStartupEvent()

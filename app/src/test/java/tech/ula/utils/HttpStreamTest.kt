@@ -13,7 +13,6 @@ class HttpStreamTest {
 
     @get:Rule val tempFolder = TemporaryFolder()
 
-    //private val baseAppsUrls = "https://github.com/CypherpunkArmory/UserLAnd-Assets-Support/raw/master/apps"
     private val baseAppsUrls = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-Support/apps"
 
     private val httpStream = HttpStream()

@@ -24,7 +24,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode vcode
-        versionName "2.8.0"
+        versionName "2021.10.29"
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -55,14 +55,14 @@ android {
 
     signingConfigs {
         beta {
-            storeFile project.file('../keystore.jks')
-            keyAlias System.getenv('ANDROID_KEY_ALIAS')
+            storeFile project.file('E:/www/app-pvtool-android/clips/leafcolor.keystore')
+            keyAlias 'leafcolor_mathland'
             storePassword System.getenv('ANDROID_STORE_PASSWORD')
             keyPassword System.getenv('ANDROID_KEY_PASSWORD')
         }
         release {
-            storeFile project.file('../keystore.jks')
-            keyAlias System.getenv('ANDROID_KEY_ALIAS')
+            storeFile project.file('E:/www/app-pvtool-android/clips/leafcolor.keystore')
+            keyAlias 'leafcolor_mathland'
             storePassword System.getenv('ANDROID_STORE_PASSWORD')
             keyPassword System.getenv('ANDROID_KEY_PASSWORD')
         }

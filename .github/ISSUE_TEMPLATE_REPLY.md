@@ -2,7 +2,7 @@ It looks like you've posted an issue that requires more details for our team to 
 working on it.
 
 We have created some issue templates to assist you in this process. These issue templates can be
-found [here](https://github.com/CypherpunkArmory/UserLAnd/tree/master/.github/ISSUE_TEMPLATE).
+found [here](https://github.com/likewu/MathLand/tree/master/.github/ISSUE_TEMPLATE).
 
 To correctly follow the template, all of the headers from the template must be present in your
 new issue. The headers for each template are the lines that begin with a '#'. Include the

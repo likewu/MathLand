@@ -1,5 +1,7 @@
 package tech.ula.model.state
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tech.ula.ServerService
 import tech.ula.model.entities.App
 import tech.ula.model.entities.Asset
 import tech.ula.model.entities.Filesystem
@@ -25,6 +28,7 @@ class SessionStartupFsm(
     private val filesystemManager: FilesystemManager,
     private val ulaFiles: UlaFiles,
     private val appsStartupFsm: AppsStartupFsm,
+    private val activityContext: Activity,
     private val assetDownloader: AssetDownloader,
     private val storageCalculator: StorageCalculator,
     private val logger: Logger = SentryLogger()
@@ -163,8 +167,15 @@ class SessionStartupFsm(
         } catch (err: Exception) {
         }
 
-        //state.postValue(SessionIsReadyForPreparation(session1, filesystem))
-        handleSessionSelected(session1)
+        if (activeSessions.isNotEmpty()/* || session1.active*/) {
+            val serviceIntent = Intent(activityContext, ServerService::class.java)
+            serviceIntent.putExtra("type", "killandstart")
+            serviceIntent.putExtra("session", activeSessions.get(0))
+            serviceIntent.putExtra("newsession", session1)
+            activityContext.startService(serviceIntent)
+        } else {
+            handleSessionSelected(session1)
+        }
     }
 
     private suspend fun findAppsFilesystem(filesystemType: String): Filesystem = withContext(Dispatchers.IO) {

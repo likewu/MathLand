@@ -70,6 +70,11 @@ class ServerService : Service(), CoroutineScope {
                 val session: Session = intent.getParcelableExtra("session")!!
                 killSession(session)
             }
+            "killandstart" -> {
+                val session: Session = intent.getParcelableExtra("session")!!
+                val newsession: Session = intent.getParcelableExtra("newsession")!!
+                killandstartSession(session, newsession)
+            }
             "filesystemIsBeingDeleted" -> {
                 val filesystemId: Long = intent.getLongExtra("filesystemId", -1)
                 cleanUpFilesystem(filesystemId)
@@ -117,6 +122,15 @@ class ServerService : Service(), CoroutineScope {
         removeSession(session)
         session.active = false
         updateSession(session)
+    }
+
+    private fun killandstartSession(session: Session, newsession: Session) {
+        localServerManager.stopService(session)
+        removeSession(session)
+        session.active = false
+        updateSession(session)
+
+        this.launch { startSession(newsession) }
     }
 
     private suspend fun startSession(session: Session) {

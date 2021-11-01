@@ -136,6 +136,7 @@ public final class TermuxService extends Service implements SessionChangedCallba
             if (username.isEmpty() || hostname.isEmpty() || port.isEmpty() || sessionName.isEmpty()) {
                 Log.e(EmulatorDebug.LOG_TAG, "Currently only intents from UserLAnd are supported");
             } else {
+                //Log.d(EmulatorDebug.LOG_TAG, "TermuxActivity FLAG_ACTIVITY_NEW_TASK");
                 // Launch the main Termux app, which will now show the current session:
                 startActivity(new Intent(this, TermuxActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }

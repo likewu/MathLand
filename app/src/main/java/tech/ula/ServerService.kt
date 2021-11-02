@@ -74,7 +74,8 @@ class ServerService : Service(), CoroutineScope {
             "killandstart" -> {
                 val session: Session = intent.getParcelableExtra("session")!!
                 val newsession: Session = intent.getParcelableExtra("newsession")!!
-                killandstartSession(session, newsession)
+                val isSameId: Int = intent.getIntExtra("isSameId", 0)
+                killandstartSession(session, newsession, isSameId)
             }
             "filesystemIsBeingDeleted" -> {
                 val filesystemId: Long = intent.getLongExtra("filesystemId", -1)
@@ -125,19 +126,23 @@ class ServerService : Service(), CoroutineScope {
         updateSession(session)
     }
 
-    private fun killandstartSession(session: Session, newsession: Session) {
-        localServerManager.stopService(session)
-        removeSession(session)
-        session.active = false
-        updateSession(session)
+    private fun killandstartSession(session: Session, newsession: Session, isSameId: Int) {
+        if (isSameId==1)
+            startClient(session)
+        else {
+            localServerManager.stopService(session)
+            removeSession(session)
+            session.active = false
+            updateSession(session)
 
-        this.launch { startSession(newsession) }
+            this.launch { startSession(newsession) }
+        }
     }
 
     private suspend fun startSession(session: Session) {
         startForeground(NotificationConstructor.serviceNotificationId, notificationManager.buildPersistentServiceNotification())
         session.pid = localServerManager.startServer(session)
-
+        Log.d("aaaaa17", session.pid.toString())
         while (!localServerManager.isServerRunning(session)) {
             delay(500)
         }
@@ -172,7 +177,6 @@ class ServerService : Service(), CoroutineScope {
         val connectBotIntent = Intent()
         connectBotIntent.action = Intent.ACTION_VIEW
         connectBotIntent.data = Uri.parse("ssh://${session.username}@localhost:2022/#userland")
-        //connectBotIntent.data = Uri.parse("ssh://${session.username}:${session.password}@localhost:2022/#userland")
         connectBotIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
         startActivity(connectBotIntent)

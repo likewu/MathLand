@@ -164,9 +164,51 @@ class SessionStartupFsm(
         if (activeSessions.isNotEmpty()/* || session1.active*/) {
             val serviceIntent = Intent(activityContext, ServerService::class.java)
             serviceIntent.putExtra("type", "killandstart")
-            serviceIntent.putExtra("session", activeSessions.get(0))
+            if (activeSessions.get(0).id==potentialAppSession1.id)
+                serviceIntent.putExtra("isSameId", 1)
+            else
+                serviceIntent.putExtra("isSameId", 0)
+            serviceIntent.putExtra("session", activeSessions.get(0).copy())
             serviceIntent.putExtra("newsession", potentialAppSession1)
+
+            withContext(Dispatchers.IO) {
+                val filesystemDirectoryName = "${filesystem.id}"
+                val requiredAssets = assetRepository.getDistributionAssetsForExistingFilesystem(filesystem)
+                val allAssetsArePresentOnFilesystem = filesystemManager.areAllRequiredAssetsPresent(filesystemDirectoryName, requiredAssets)
+                val lastDownloadedAssetVersion = assetRepository.getLatestDistributionVersion(filesystem.distributionType)
+                val filesystemAssetsNeedUpdating = filesystem.versionCodeUsed < lastDownloadedAssetVersion
+
+                if (!allAssetsArePresentOnFilesystem || filesystemAssetsNeedUpdating) {
+                    if (!assetRepository.assetsArePresentInSupportDirectories(requiredAssets)) {
+                        state.postValue(AssetsAreMissingFromSupportDirectories)
+                        return@withContext
+                    }
+
+                    try {
+                        filesystemManager.copyAssetsToFilesystem(filesystem)
+                        filesystem.versionCodeUsed = lastDownloadedAssetVersion
+                        filesystemDao.updateFilesystem(filesystem)
+                    } catch (err: Exception) {
+                        state.postValue(FilesystemAssetCopyFailed)
+                        return@withContext
+                    }
+
+                    if (filesystemManager.hasFilesystemBeenSuccessfullyExtracted(filesystemDirectoryName)) {
+                        filesystemManager.removeRootfsFilesFromFilesystem(filesystemDirectoryName)
+                    }
+                }
+            }
+
+            val filesystemDirectoryName = "${filesystem.id}"
+            if (filesystemManager.hasFilesystemBeenSuccessfullyExtracted(filesystemDirectoryName)) {
+                filesystemManager.removeRootfsFilesFromFilesystem(filesystemDirectoryName)
+            } else {
+                state.postValue(ExtractionFailed(reason = "Unknown reason."))
+                return@launch
+            }
+
             activityContext.startService(serviceIntent)
+            //viewModel.submitSessionSelection(potentialAppSession1)
         } else {
             //handleSessionSelected(session1)
             viewModel.submitSessionSelection(potentialAppSession1)

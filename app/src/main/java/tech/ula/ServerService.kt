@@ -165,7 +165,7 @@ class ServerService : Service(), CoroutineScope {
 
     private fun startClient(session: Session) {
         when (session.serviceType) {
-            ServiceType.Ssh -> startSshClient(session)
+            ServiceType.Ssh -> startSshClient2(session)
             ServiceType.Vnc -> startVncClient(session, "com.iiordanov.freebVNC")
             ServiceType.Xsdl -> startXsdlClient("x.org.server")
             else -> sendDialogBroadcast("unhandledSessionServiceType")
@@ -178,6 +178,15 @@ class ServerService : Service(), CoroutineScope {
         connectBotIntent.action = Intent.ACTION_VIEW
         connectBotIntent.data = Uri.parse("ssh://${session.username}@localhost:2022/#userland")
         connectBotIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+        startActivity(connectBotIntent)
+    }
+
+    private fun startSshClient2(session: Session) {
+        val connectBotIntent = Intent()
+        connectBotIntent.action = Intent.ACTION_VIEW
+        connectBotIntent.data = Uri.parse("ssh://${session.username}@localhost:2022/#userland")
+        connectBotIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         startActivity(connectBotIntent)
     }

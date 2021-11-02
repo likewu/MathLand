@@ -136,7 +136,7 @@ class SessionStartupFsm(
         val eventBreadcrumb = UlaBreadcrumb(className, BreadcrumbType.ReceivedEvent, "Event: $event State: ${state.value}")
         logger.addBreadcrumb(eventBreadcrumb)
 
-        val session1 = (event as SessionSelected).session
+        //val session1 = (event as SessionSelected).session
 
         val filesystem = findAppsFilesystem("debian")
         val potentialAppSession1 = findAppSession("debian", filesystem.id)
@@ -151,14 +151,8 @@ class SessionStartupFsm(
             return@launch
         }
 
-        session1.filesystemId = filesystem.id
-
-        session1.username = filesystem.defaultUsername
-        session1.password = filesystem.defaultPassword
-
-        session1.filesystemName = potentialAppSession1.filesystemName
-        session1.serviceType = potentialAppSession1.serviceType
-        session1.active = potentialAppSession1.active
+        potentialAppSession1.username = filesystem.defaultUsername
+        potentialAppSession1.password = filesystem.defaultPassword
 
         try {
             withContext(Dispatchers.IO) {
@@ -171,10 +165,11 @@ class SessionStartupFsm(
             val serviceIntent = Intent(activityContext, ServerService::class.java)
             serviceIntent.putExtra("type", "killandstart")
             serviceIntent.putExtra("session", activeSessions.get(0))
-            serviceIntent.putExtra("newsession", session1)
+            serviceIntent.putExtra("newsession", potentialAppSession1)
             activityContext.startService(serviceIntent)
         } else {
-            handleSessionSelected(session1)
+            //handleSessionSelected(session1)
+            viewModel.submitSessionSelection(potentialAppSession1)
         }
     }
 

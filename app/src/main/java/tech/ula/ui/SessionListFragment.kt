@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.* // ktlint-disable no-wildcard-imports
 import android.widget.AdapterView
@@ -44,7 +45,7 @@ class SessionListFragment : Fragment() {
         it?.let { pair ->
             sessionList = pair.first
             filesystemList = pair.second
-
+            //Log.d("aaaaa14", "sessionsAndFilesystemsChangeObserver"+sessionList.toString())
             sessionAdapter = SessionListAdapter(activityContext, sessionList, filesystemList)
             list_sessions.adapter = sessionAdapter
         }
@@ -74,7 +75,7 @@ class SessionListFragment : Fragment() {
         activityContext = activity!! as MainActivity
 
         sessionListViewModel.getSessionsAndFilesystems().observe(viewLifecycleOwner, sessionsAndFilesystemsChangeObserver)
-
+        //Log.d("aaaaa12", "onActivityCreated")
         registerForContextMenu(list_sessions)
         list_sessions.onItemClickListener = AdapterView.OnItemClickListener {
             parent, _, position, _ ->

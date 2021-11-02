@@ -1,5 +1,6 @@
 package tech.ula.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
@@ -137,6 +138,7 @@ class MainActivityViewModel(
     fun submitSessionSelection(session: Session) {
         if (!selectionsCanBeMade()) return
         lastSelectedSession = session
+        Log.d("aaaaa", session.toString())
         submitSessionStartupEvent(SessionSelected(session))
     }
 
@@ -382,6 +384,7 @@ class MainActivityViewModel(
     }
 
     private fun resetStartupState() {
+        Log.d("aaaaa2", lastSelectedSession.toString())
         lastSelectedApp = unselectedApp
         lastSelectedSession = unselectedSession
         lastSelectedFilesystem = unselectedFilesystem

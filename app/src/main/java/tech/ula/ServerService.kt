@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
+import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.coroutines.* // ktlint-disable no-wildcard-imports
 import tech.ula.model.entities.App
@@ -143,6 +144,7 @@ class ServerService : Service(), CoroutineScope {
 
         session.active = true
         updateSession(session)
+        Log.d("aaaaa1", session.toString())
         startClient(session)
         activeSessions[session.pid] = session
     }

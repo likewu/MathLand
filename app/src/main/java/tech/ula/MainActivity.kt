@@ -227,6 +227,7 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
 
     override fun onStart() {
         super.onStart()
+        Log.d("aaaaa", "start")
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(serverServiceBroadcastReceiver, IntentFilter(ServerService.SERVER_SERVICE_RESULT))
         registerReceiver(downloadBroadcastReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
@@ -240,13 +241,17 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
         val intent11 = this.getIntent()
         val bundle = intent11.getExtras()
         if (bundle != null){
+            //LocalBroadcastManager.getInstance(this)
+            //    .registerReceiver(serverServiceBroadcastReceiver, IntentFilter(ServerService.SERVER_SERVICE_RESULT))
+            //registerReceiver(downloadBroadcastReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+
             val codeLang = bundle.getString("CODE_LANGUAGE");
             val filePath = bundle.getString("CODE_FILE_PATH");
             Toast.makeText(this, "run " + filePath, Toast.LENGTH_LONG).show()
             intent11.removeExtra("CODE_LANGUAGE")
             intent11.removeExtra("CODE_FILE_PATH")
             viewModel.submitCodeRun(codeLang, filePath)
-            //Log.e("aaaaa", bundle.toString())
+            //Log.d("aaaaa", bundle.toString())
         } else {
             viewModel.handleOnResume()
         }

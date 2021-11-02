@@ -31,6 +31,8 @@ class LocalServerManager(
 
     fun stopService(session: Session) {
         val command = "support/killProcTree.sh ${session.pid} ${session.serverPid()}"
+        val breadcrumb = UlaBreadcrumb("LocalServerManager", BreadcrumbType.RuntimeError, "command: ${command}")
+        logger.addBreadcrumb(breadcrumb)
         val result = busyboxExecutor.executeScript(command)
         if (result is FailedExecution) {
             val details = "func: stopService err: ${result.reason}"
@@ -41,8 +43,8 @@ class LocalServerManager(
 
     fun isServerRunning(session: Session): Boolean {
         val command = "support/isServerInProcTree.sh ${session.serverPid()}"
-        //val breadcrumb = UlaBreadcrumb("LocalServerManager", BreadcrumbType.RuntimeError, "command: ${command}")
-        //logger.addBreadcrumb(breadcrumb)
+        val breadcrumb = UlaBreadcrumb("LocalServerManager", BreadcrumbType.RuntimeError, "command: ${command}")
+        logger.addBreadcrumb(breadcrumb)
         // The server itself is run by a third-party, so we can consider this to always be true.
         // The third-party app is responsible for handling errors starting their server.
         if (session.serviceType == ServiceType.Xsdl) return true

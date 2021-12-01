@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import tech.ula.R
+import cn.leafcolor.mathland.R
 import tech.ula.viewmodel.* // ktlint-disable no-wildcard-imports
 
 @RunWith(MockitoJUnitRunner::class)

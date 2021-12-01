@@ -21,8 +21,8 @@ import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.frag_filesystem_edit.*
-import tech.ula.MainActivity
-import tech.ula.R
+import cn.leafcolor.mathland.MainActivity
+import cn.leafcolor.mathland.R
 import tech.ula.model.repositories.UlaDatabase
 import tech.ula.utils.PermissionHandler
 import tech.ula.utils.CredentialValidator

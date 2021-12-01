@@ -12,8 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.android.billingclient.api.Purchase
-import tech.ula.MainActivity
-import tech.ula.R
+import cn.leafcolor.mathland.MainActivity
+import cn.leafcolor.mathland.R
 
 interface UserPrompter {
     @get: StringRes val initialPrompt: Int

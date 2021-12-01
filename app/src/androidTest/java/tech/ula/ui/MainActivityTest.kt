@@ -21,8 +21,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import tech.ula.MainActivity
-import tech.ula.R
+import cn.leafcolor.mathland.MainActivity
+import cn.leafcolor.mathland.R
 import tech.ula.androidTestHelpers.* // ktlint-disable no-wildcard-imports
 import java.io.File
 

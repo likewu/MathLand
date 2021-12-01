@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.frag_app_details.* // ktlint-disable no-wildcard-imports
-import tech.ula.R
+import cn.leafcolor.mathland.R
 import tech.ula.model.repositories.UlaDatabase
 import tech.ula.utils.* // ktlint-disable no-wildcard-imports
 import tech.ula.viewmodel.AppDetailsEvent

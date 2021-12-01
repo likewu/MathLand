@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.frag_help.*
-import tech.ula.R
+import cn.leafcolor.mathland.R
 
 class HelpFragment : Fragment() {
 

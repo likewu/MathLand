@@ -1,7 +1,7 @@
 package tech.ula.utils
 
 import android.content.SharedPreferences
-import tech.ula.BuildConfig
+import cn.leafcolor.mathland.BuildConfig
 
 class QWarningHandler(private val prefs: SharedPreferences, private val ulaFiles: UlaFiles) {
 

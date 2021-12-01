@@ -3,7 +3,7 @@ package tech.ula.utils
 import android.content.ContentResolver
 import android.content.res.Resources
 import android.net.Uri
-import tech.ula.R
+import cn.leafcolor.mathland.R
 import java.io.File
 
 class AppDetails(private val applicationFilesDir: String, private val resources: Resources) {

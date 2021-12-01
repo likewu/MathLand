@@ -11,7 +11,7 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import tech.ula.R
+import cn.leafcolor.mathland.R
 import tech.ula.model.entities.App
 import tech.ula.utils.AppDetails
 

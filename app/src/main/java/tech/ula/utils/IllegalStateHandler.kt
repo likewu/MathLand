@@ -1,6 +1,6 @@
 package tech.ula.utils
 
-import tech.ula.R
+import cn.leafcolor.mathland.R
 import tech.ula.viewmodel.* // ktlint-disable no-wildcard-imports
 
 object IllegalStateHandler {

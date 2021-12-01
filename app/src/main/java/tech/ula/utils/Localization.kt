@@ -1,7 +1,7 @@
 package tech.ula.utils
 
 import android.content.Context
-import tech.ula.R
+import cn.leafcolor.mathland.R
 
 interface Localization {
     fun getString(context: Context): String

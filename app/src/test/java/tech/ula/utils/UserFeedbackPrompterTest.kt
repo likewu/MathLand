@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import tech.ula.R
+import cn.leafcolor.mathland.R
 
 @RunWith(MockitoJUnitRunner::class)
 class UserFeedbackPrompterTest {

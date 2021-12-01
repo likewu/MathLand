@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
-import tech.ula.R
+import cn.leafcolor.mathland.R
 
 class PermissionHandler {
     companion object {

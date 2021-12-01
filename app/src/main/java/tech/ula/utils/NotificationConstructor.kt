@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import tech.ula.MainActivity
-import tech.ula.R
+import cn.leafcolor.mathland.MainActivity
+import cn.leafcolor.mathland.R
 import tech.ula.ServerService
 
 class NotificationConstructor(val context: Context) {

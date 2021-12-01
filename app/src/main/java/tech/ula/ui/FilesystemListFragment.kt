@@ -12,8 +12,8 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.frag_filesystem_list.* // ktlint-disable no-wildcard-imports
-import tech.ula.MainActivity
-import tech.ula.R
+import cn.leafcolor.mathland.MainActivity
+import cn.leafcolor.mathland.R
 import tech.ula.ServerService
 import tech.ula.model.entities.Filesystem
 import tech.ula.model.repositories.UlaDatabase

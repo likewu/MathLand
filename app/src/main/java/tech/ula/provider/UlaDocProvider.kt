@@ -8,7 +8,7 @@ import android.provider.DocumentsContract.Root
 import android.provider.DocumentsContract.Document
 import android.provider.DocumentsProvider
 import android.webkit.MimeTypeMap
-import tech.ula.R
+import cn.leafcolor.mathland.R
 import tech.ula.utils.UlaFiles
 import java.io.File
 import java.io.FileNotFoundException

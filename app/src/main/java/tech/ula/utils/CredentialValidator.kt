@@ -1,6 +1,6 @@
 package tech.ula.utils
 
-import tech.ula.R
+import cn.leafcolor.mathland.R
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 

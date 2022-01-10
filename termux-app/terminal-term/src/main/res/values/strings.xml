@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <string name="application_name">UserLAnd Terminal</string>
-   <string name="shared_user_label">UserLAnd Terminal user</string>
+   <string name="application_name">MathLand Terminal</string>
+   <string name="shared_user_label">MathLand Terminal user</string>
    <string name="new_session">New session</string>
    <string name="new_session_failsafe">Failsafe</string>
    <string name="toggle_soft_keyboard">Keyboard</string>
@@ -36,7 +36,7 @@
   <string name="file_received_edit_button">Edit</string>
   <string name="file_received_open_folder_button">Open folder</string>
 
-  <string name="error_empty_intent_data">Intent data is empty.  Only UserLAnd intents are supported</string>
+  <string name="error_empty_intent_data">Intent data is empty.  Only MathLand intents are supported</string>
   <string name="error_regex_parsing">Error occurred while parsing intent data with regex</string>
 
   <string name="button_exit">Exit</string>

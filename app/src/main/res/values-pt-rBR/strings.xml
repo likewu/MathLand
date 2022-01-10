@@ -1,6 +1,6 @@
 <resources>                                                         <!-- Translators, pay attention to these notes! --> 
-    <string name="app_name">UserLAnd</string>
-    <string name="welcome">Bem-vindo ao UserLAnd!</string>
+    <string name="app_name">MathLand</string>
+    <string name="welcome">Bem-vindo ao MathLand!</string>
     <string name="permission_request_code">1000</string>
 
     <!-- Labels -->

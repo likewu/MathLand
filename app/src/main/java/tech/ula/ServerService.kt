@@ -176,7 +176,7 @@ class ServerService : Service(), CoroutineScope {
     private fun startSshClient(session: Session) {
         val connectBotIntent = Intent()
         connectBotIntent.action = Intent.ACTION_VIEW
-        connectBotIntent.data = Uri.parse("ssh://${session.username}@localhost:2022/#userland")
+        connectBotIntent.data = Uri.parse("ssh://${session.username}@localhost:2022/#mathland")
         connectBotIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
         startActivity(connectBotIntent)
@@ -185,7 +185,7 @@ class ServerService : Service(), CoroutineScope {
     private fun startSshClient2(session: Session) {
         val connectBotIntent = Intent()
         connectBotIntent.action = Intent.ACTION_VIEW
-        connectBotIntent.data = Uri.parse("ssh://${session.username}@localhost:2022/#userland")
+        connectBotIntent.data = Uri.parse("ssh://${session.username}@localhost:2022/#mathland")
         connectBotIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         startActivity(connectBotIntent)

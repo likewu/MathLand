@@ -136,6 +136,8 @@ class FilesystemEditFragment : Fragment() {
         } else {
             input_filesystem_password.setText("666666")
             input_filesystem_vncpassword.setText("666666")
+            //text_input_layout_filesystem_passwd.setPasswordToggleEnabled(false)
+            //text_input_layout_filesystem_vncpasswd.setPasswordToggleEnabled(false)
         }
 
         if (filesystem.isAppsFilesystem) {

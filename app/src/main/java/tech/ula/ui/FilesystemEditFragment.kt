@@ -133,6 +133,9 @@ class FilesystemEditFragment : Fragment() {
             input_filesystem_username.isEnabled = false
             input_filesystem_password.isEnabled = false
             input_filesystem_vncpassword.isEnabled = false
+        } else {
+            input_filesystem_password.setText("666666")
+            input_filesystem_vncpassword.setText("666666")
         }
 
         if (filesystem.isAppsFilesystem) {

@@ -13,6 +13,7 @@ import android.view.View
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuInflater
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.frag_app_list.* // ktlint-disable no-wildcard-imports
@@ -83,7 +84,9 @@ class AppsListFragment : Fragment(), AppsListAdapter.AppsClickHandler {
             refreshStatus = newStatus
             swipe_refresh.isRefreshing = refreshStatus == RefreshStatus.ACTIVE
 
-            if (refreshStatus == RefreshStatus.FAILED) showRefreshUnavailableDialog()
+            if (refreshStatus == RefreshStatus.FAILED)
+                //showRefreshUnavailableDialog()
+                Toast.makeText(activityContext, R.string.alert_network_required_for_refresh, Toast.LENGTH_LONG).show()
         }
     }
 

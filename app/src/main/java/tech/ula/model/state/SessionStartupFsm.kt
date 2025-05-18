@@ -278,6 +278,7 @@ class SessionStartupFsm(
                 !filesystemManager.hasFilesystemBeenSuccessfullyExtracted("${filesystem.id}") &&
                 !filesystem.isCreatedFromBackup
 
+        //
         val downloadRequirements = try {
             assetRepository.generateDownloadRequirements(filesystem, assetList, filesystemNeedsExtraction)
         } catch (err: UnknownHostException) {
@@ -321,6 +322,7 @@ class SessionStartupFsm(
     }
 
     private fun handleSyncDownloadState() {
+        //
         if (assetDownloader.downloadStateHasBeenCached()) {
             state.postValue(DownloadingAssets(0, 0)) // Reset state so events can be submitted
             handleAssetDownloadState(assetDownloader.syncStateWithCache())

@@ -255,6 +255,7 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
             //Log.d("aaaaa", bundle.toString())
         } else {
             viewModel.handleOnResume()
+            //
         }
     }
 

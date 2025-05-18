@@ -28,7 +28,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         ProotDebugLogger(activity!!.defaultSharedPreferences, ulaFiles)
     }
 
-    @UseExperimental(ExperimentalStdlibApi::class)
+    @OptIn(ExperimentalStdlibApi::class)
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 

@@ -6,10 +6,15 @@ import tech.ula.model.entities.App
 import tech.ula.utils.* // ktlint-disable no-wildcard-imports
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.FileInputStream
 import java.util.Locale
 
 class GithubAppsFetcher(
     private val filesDirPath: String,
+    private val appsInputStream: InputStream,
     private val httpStream: HttpStream = HttpStream(),
     private val logger: Logger = SentryLogger()
 ) {
@@ -27,7 +32,14 @@ class GithubAppsFetcher(
         return@withContext try {
             val url = "$baseUrl/apps.txt"
             val numLinesToSkip = 1 // Skip first line which defines schema
-            val contents: List<String> = httpStream.toLines(url)
+            var contents: List<String>;
+            try {
+                contents = httpStream.toLines(url)
+            } catch (err: Exception) {
+                val reader = BufferedReader(InputStreamReader(appsInputStream))
+                contents = reader.readLines()
+                reader.close()
+            }
             contents.drop(numLinesToSkip).map { line ->
                 // Destructure app fields
                 val (

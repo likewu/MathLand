@@ -55,7 +55,8 @@ class AppsListFragment : Fragment(), AppsListAdapter.AppsClickHandler {
     private val viewModel: AppsListViewModel by lazy {
         val ulaDatabase = UlaDatabase.getInstance(activityContext)
         val appsDao = ulaDatabase.appsDao()
-        val githubFetcher = GithubAppsFetcher("${activityContext.filesDir}")
+        val appsInputStream = activityContext.getAssets().open("apps.txt")
+        val githubFetcher = GithubAppsFetcher("${activityContext.filesDir}", appsInputStream)
 
         val appsRepository = AppsRepository(appsDao, githubFetcher, appsPreferences)
         ViewModelProviders.of(this, AppsListViewModelFactory(appsRepository))
@@ -84,9 +85,10 @@ class AppsListFragment : Fragment(), AppsListAdapter.AppsClickHandler {
             refreshStatus = newStatus
             swipe_refresh.isRefreshing = refreshStatus == RefreshStatus.ACTIVE
 
-            if (refreshStatus == RefreshStatus.FAILED)
-                //showRefreshUnavailableDialog()
-                Toast.makeText(activityContext, R.string.alert_network_required_for_refresh, Toast.LENGTH_LONG).show()
+            if (refreshStatus == RefreshStatus.FAILED) {
+                showRefreshUnavailableDialog()
+                //Toast.makeText(activityContext, R.string.alert_network_required_for_refresh, Toast.LENGTH_LONG).show()
+            }
         }
     }
 

@@ -1,7 +1,12 @@
+plugins {
+    id 'com.google.devtools.ksp' version '1.6.21-1.0.6' apply false
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'jacoco'
 apply plugin: 'de.undercouch.download'
@@ -99,6 +104,10 @@ android {
             includeAndroidResources = true
         }
     }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 jacoco {
@@ -234,16 +243,16 @@ task checkIfAssetsMissing {
 preBuild.dependsOn checkIfAssetsMissing
 
 dependencies {
-    def moshi_version = '1.8.0'
+    def moshi_version = '1.14.0'
     def okhttp_version = '3.13.1'
     def sentry_version = '1.7.22'
     def slf4j_version = '1.7.26'
 
-    def kotlinx_coroutines_version = '1.0.0'
-    def kotlin_jdk_version = '1.5.0'
+    def kotlinx_coroutines_version = '1.6.4'
+    def kotlin_jdk_version = '1.6.21'
 
     // Androidx versions
-    def room_version = '2.1.0'
+    def room_version = '2.3.0'
     def lifecycle_version = '2.2.0'
     def support_library_version = '1.2.1'
     def preference_version = '1.1.1'
@@ -259,6 +268,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$ktx_version"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
@@ -270,8 +280,10 @@ dependencies {
     implementation "com.google.android.material:material:$support_library_version"
     ktlint "com.pinterest:ktlint:0.32.0"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    //implementation "com.squareup.okio:okio:3.7.0"
     implementation "com.squareup.moshi:moshi:$moshi_version"
     annotationProcessor "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
     implementation 'org.rauschig:jarchivelib:0.8.0' // v1.0.0 breaks all sdk versions < 26 https://github.com/thrau/jarchivelib/issues/75
     implementation "io.sentry:sentry-android:$sentry_version"
     implementation "org.slf4j:slf4j-nop:$slf4j_version"

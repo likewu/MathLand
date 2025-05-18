@@ -10,6 +10,7 @@ class HttpStream {
     // TODO this function should be made private and usages be reworked to match other public functions
     fun fromUrl(url: String): InputStream {
         val conn = URL(url).openConnection() as HttpURLConnection
+        conn.setConnectTimeout(16000)
         conn.requestMethod = "GET"
         return conn.inputStream
     }

@@ -11,6 +11,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.FileInputStream
 import java.util.Locale
+import java.net.SocketTimeoutException
 
 class GithubAppsFetcher(
     private val filesDirPath: String,
@@ -27,18 +28,22 @@ class GithubAppsFetcher(
     //private val baseUrl = "https://github.com/CypherpunkArmory/UserLAnd-Assets-Support/raw/$branch/apps"
     private val baseUrl = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-Support/apps"
 
+    private var http_state = true;
+
     @Throws(IOException::class)
     suspend fun fetchAppsList(): List<App> = withContext(Dispatchers.IO) {
+        http_state = true;
         return@withContext try {
             val url = "$baseUrl/apps.txt"
             val numLinesToSkip = 1 // Skip first line which defines schema
             var contents: List<String>;
             try {
                 contents = httpStream.toLines(url)
-            } catch (err: Exception) {
+            } catch (err: SocketTimeoutException) {
                 val reader = BufferedReader(InputStreamReader(appsInputStream))
                 contents = reader.readLines()
                 reader.close()
+                http_state = false;
             }
             contents.drop(numLinesToSkip).map { line ->
                 // Destructure app fields
@@ -73,20 +78,29 @@ class GithubAppsFetcher(
         val directoryAndFilename = "${app.name}/${app.name}.png"
         val file = File("$filesDirPath/apps/$directoryAndFilename")
         val url = "$baseUrl/$directoryAndFilename"
-        httpStream.toFile(url, file)
+        try {
+            if (http_state) httpStream.toFile(url, file)
+        } catch (err: SocketTimeoutException) {
+        }
     }
 
     suspend fun fetchAppDescription(app: App) = withContext(Dispatchers.IO) {
         val directoryAndFilename = "${app.name}/${app.name}.txt"
         val url = "$baseUrl/$directoryAndFilename"
         val file = File("$filesDirPath/apps/$directoryAndFilename")
-        httpStream.toTextFile(url, file)
+        try {
+            if (http_state) httpStream.toTextFile(url, file)
+        } catch (err: SocketTimeoutException) {
+        }
     }
 
     suspend fun fetchAppScript(app: App) = withContext(Dispatchers.IO) {
         val directoryAndFilename = "${app.name}/${app.name}.sh"
         val url = "$baseUrl/$directoryAndFilename"
         val file = File("$filesDirPath/apps/$directoryAndFilename")
-        httpStream.toTextFile(url, file)
+        try {
+            if (http_state) httpStream.toTextFile(url, file)
+        } catch (err: SocketTimeoutException) {
+        }
     }
 }

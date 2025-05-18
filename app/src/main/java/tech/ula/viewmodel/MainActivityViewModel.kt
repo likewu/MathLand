@@ -138,7 +138,7 @@ class MainActivityViewModel(
     fun submitSessionSelection(session: Session) {
         if (!selectionsCanBeMade()) return
         lastSelectedSession = session
-        Log.d("aaaaa", session.toString())
+        //Log.d("aaaaa", session.toString())
         submitSessionStartupEvent(SessionSelected(session))
     }
 

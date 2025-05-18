@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
 
     override fun onStart() {
         super.onStart()
-        Log.d("aaaaa", "start")
+        //Log.d("aaaaa", "start")
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(serverServiceBroadcastReceiver, IntentFilter(ServerService.SERVER_SERVICE_RESULT))
         registerReceiver(downloadBroadcastReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))

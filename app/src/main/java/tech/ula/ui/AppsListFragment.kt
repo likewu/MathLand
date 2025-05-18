@@ -29,6 +29,13 @@ import tech.ula.utils.* // ktlint-disable no-wildcard-imports
 import tech.ula.utils.preferences.AppsPreferences
 import tech.ula.viewmodel.AppsListViewModel
 import tech.ula.viewmodel.AppsListViewModelFactory
+import java.io.File
+import java.util.Locale
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.ByteArrayInputStream
+import java.io.BufferedInputStream
+import android.util.Log
 
 class AppsListFragment : Fragment(), AppsListAdapter.AppsClickHandler {
 
@@ -55,7 +62,58 @@ class AppsListFragment : Fragment(), AppsListAdapter.AppsClickHandler {
     private val viewModel: AppsListViewModel by lazy {
         val ulaDatabase = UlaDatabase.getInstance(activityContext)
         val appsDao = ulaDatabase.appsDao()
-        val appsInputStream = activityContext.getAssets().open("apps.txt")
+        val appsInputStream = BufferedInputStream(activityContext.getAssets().open("apps/apps.txt"))
+        appsInputStream.mark(0)
+        var appsFile: File = File("${activityContext.filesDir}/apps/apps.txt")
+        if (!appsFile.exists()) {
+            //Log.d("aaaaa11", "aaaaaaaaaaaaaaaaaaaaaaa")
+            val reader = BufferedReader(InputStreamReader(ByteArrayInputStream(appsInputStream.readBytes())))
+            appsInputStream.reset()
+            var contents: List<String> = reader.readLines()
+            contents.drop(1).forEach { line ->
+                val (
+                    name,
+                    category,
+                    filesystemRequired,
+                    supportsCli,
+                    supportsGui,
+                    //isPaidApp,
+                    //version
+                ) = line.toLowerCase(Locale.ENGLISH).split(", ")
+                val appDir = File("${activityContext.filesDir}/apps/${name}")
+                if (!appDir.exists()) appDir.mkdirs()
+                //Log.d("aaaaa11", "bbbbbbbbbbbbbbbbbbbbbbb")
+                var directoryAndFilename = "apps/${name}/${name}.png"
+                var inputStream = activityContext.getAssets().open(directoryAndFilename)
+                var file = File("${activityContext.filesDir}/$directoryAndFilename")
+                var outputStream = file.outputStream()
+                outputStream.write(inputStream.readBytes())
+                inputStream.close()
+                outputStream.close()
+                
+                directoryAndFilename = "apps/${name}/${name}.txt"
+                inputStream = activityContext.getAssets().open(directoryAndFilename)
+                file = File("${activityContext.filesDir}/$directoryAndFilename")
+                outputStream = file.outputStream()
+                outputStream.write(inputStream.readBytes())
+                inputStream.close()
+                outputStream.close()
+                
+                directoryAndFilename = "apps/${name}/${name}.sh"
+                inputStream = activityContext.getAssets().open(directoryAndFilename)
+                file = File("${activityContext.filesDir}/$directoryAndFilename")
+                outputStream = file.outputStream()
+                outputStream.write(inputStream.readBytes())
+                inputStream.close()
+                outputStream.close()
+            }
+            val outputStream = appsFile.outputStream()
+            outputStream.write(appsInputStream.readBytes())
+            appsInputStream.reset()
+            outputStream.close()
+        }
+        //Log.d("aaaaa11", String(appsInputStream.readBytes()))
+        //appsInputStream.reset()
         val githubFetcher = GithubAppsFetcher("${activityContext.filesDir}", appsInputStream)
 
         val appsRepository = AppsRepository(appsDao, githubFetcher, appsPreferences)

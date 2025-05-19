@@ -269,6 +269,7 @@ class MainActivityViewModel(
                 lastSelectedFilesystem = newState.filesystem
                 state.postValue(StartingSetup)
                 doTransitionIfRequirementsAreSelected {
+                    //
                     submitSessionStartupEvent(RetrieveAssetLists(lastSelectedFilesystem))
                 }
             }
@@ -292,6 +293,9 @@ class MainActivityViewModel(
             }
             is StorageVerificationState -> {
                 handleStorageVerificationState(newState)
+            }
+            is killProgressBarState -> {
+                state.postValue(ProgressBarOperationComplete)
             }
         }
     }

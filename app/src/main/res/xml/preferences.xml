@@ -46,7 +46,7 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="termux"
+        android:title="TERMUX"
         android:key="pref_termux_category"
         app:iconSpaceReserved="false">
         <EditTextPreference
@@ -58,6 +58,50 @@
         <Preference
             android:key="pref_termux_properties_save"
             android:title="Save termux.properties"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Asset Cache Status"
+        android:key="pref_asset_cache_status_category"
+        app:iconSpaceReserved="false">
+        <!-- <Preference
+            android:enabled="false"
+            android:key="pref_cached_asset_list"
+            android:title="Cached Asset List"
+            app:iconSpaceReserved="false"/> -->
+        <Preference
+            android:enabled="false"
+            android:key="pref_latest_download_version"
+            android:title="Latest Download Version"
+            android:summary=""
+            app:iconSpaceReserved="false"/>
+        <Preference
+            android:enabled="false"
+            android:key="pref_latest_download_filesystem_version"
+            android:title="Latest Download Filesystem Version"
+            android:summary=""
+            app:iconSpaceReserved="false"/>
+        <!-- <Preference
+            android:enabled="false"
+            android:key="pref_downloads_are_in_progress"
+            android:title="Downloads Are InProgress"
+            app:iconSpaceReserved="false"/> -->
+        <!-- <Preference
+            android:enabled="false"
+            android:key="pref_currently_enqueued_downloads"
+            android:title="Currently Enqueued Downloads"
+            app:iconSpaceReserved="false"/> -->
+        <Preference
+            android:enabled="false"
+            android:key="pref_is_assets_exists"
+            android:title="Is Assets Exists"
+            android:summary=""
+            app:iconSpaceReserved="false"/>
+        <Preference
+            android:enabled="false"
+            android:key="pref_is_rootfs_exists"
+            android:title="Is Rootfs Exists"
+            android:summary=""
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

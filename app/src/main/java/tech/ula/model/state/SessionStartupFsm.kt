@@ -263,6 +263,7 @@ class SessionStartupFsm(
 
         val assetList = assetRepository.getAssetList(filesystem.distributionType)
 
+        //
         if (assetList.isEmpty()) {
             state.postValue(AssetListsRetrievalFailed)
             return
@@ -283,6 +284,9 @@ class SessionStartupFsm(
             assetRepository.generateDownloadRequirements(filesystem, assetList, filesystemNeedsExtraction)
         } catch (err: UnknownHostException) {
             state.postValue(RemoteUnreachableForGeneration)
+            return
+        } catch (err: SessionStartupException) {
+            state.postValue(killProgressBarState)
             return
         }
 
@@ -461,6 +465,8 @@ object VerifyingSufficientStorageFailed : StorageVerificationState()
 object LowAvailableStorage : StorageVerificationState()
 object StorageVerificationCompletedSuccessfully : StorageVerificationState()
 
+object killProgressBarState : SessionStartupState()
+
 sealed class SessionStartupEvent
 data class SessionSelected(val session: Session) : SessionStartupEvent()
 data class RetrieveAssetLists(val filesystem: Filesystem) : SessionStartupEvent()
@@ -474,3 +480,5 @@ object VerifyAvailableStorage : SessionStartupEvent()
 object VerifyAvailableStorageComplete : SessionStartupEvent()
 data class ExtractFilesystem(val filesystem: Filesystem) : SessionStartupEvent()
 object ResetSessionState : SessionStartupEvent()
+
+class SessionStartupException(message: String): Exception(message)

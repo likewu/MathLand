@@ -14,7 +14,7 @@ import java.io.IOException
 import java.net.UnknownHostException
 
 class UrlProvider {
-    fun getBaseUrl(): String {
+    fun getBaseUrl(): String {  //no use
         return "https://api.github.com/"
     }
 }
@@ -65,6 +65,8 @@ class GithubApiClient(
     // Query latest release data and memoize results.
     @Throws(IOException::class, UnknownHostException::class)
     private suspend fun queryLatestRelease(repo: String): ReleasesResponse = withContext(Dispatchers.IO) {
+        throw UnknownHostException("")
+
         val releaseToUse = getReleaseToUseForRepo(repo)
         //val base = urlProvider.getBaseUrl()
         //val url = base + "repos/CypherpunkArmory/UserLAnd-Assets-$repo/releases/$releaseToUse"
@@ -76,6 +78,7 @@ class GithubApiClient(
                 .url(url)
                 .build()
         val response = try {
+            //client.setConnectTimeout(16000)
             client.newCall(request).execute()
         } catch (err: UnknownHostException) {
             logger.addExceptionBreadcrumb(err)

@@ -13,6 +13,8 @@ import java.io.File
 import java.io.InputStreamReader
 import java.net.UnknownHostException
 import kotlin.Exception
+import android.content.res.AssetManager
+import tech.ula.model.state.SessionStartupException
 
 data class DownloadMetadata(
     val filename: String,
@@ -23,13 +25,14 @@ data class DownloadMetadata(
 )
 
 class AssetRepository(
+    private val ulaFiles: UlaFiles,
+    private val assetManager: AssetManager,
     private val applicationFilesDirPath: String,
     private val assetPreferences: AssetPreferences,
     private val githubApiClient: GithubApiClient,
     private val httpStream: HttpStream = HttpStream(),
     private val logger: Logger = SentryLogger()
 ) {
-
     @Throws(IllegalStateException::class, UnknownHostException::class)
     suspend fun generateDownloadRequirements(
         filesystem: Filesystem,
@@ -46,6 +49,7 @@ class AssetRepository(
 
         val repo = filesystem.distributionType
         downloadRequirements.addAll(getRegularAssetDownloadRequirements(assetList, repo))
+        //
         if (filesystemNeedsExtraction) {
             downloadRequirements.addAll(getRootFsAssetDownloadRequirements(repo))
         }
@@ -78,7 +82,21 @@ class AssetRepository(
             assetPreferences.setAssetList(distributionType, list)
             list
         } catch (err: Exception) {
-            assetPreferences.getCachedAssetList(distributionType)
+            val cachedAssetList = assetPreferences.getCachedAssetList(distributionType)
+            if (cachedAssetList.isEmpty()) {
+                val inputStream = assetManager.open(distributionType.substring(0, 1).toUpperCase() + distributionType.substring(1) + "_latest/" + ulaFiles.getArchType() + "-assets.txt")
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val assetList = mutableListOf<Asset>()
+                reader.forEachLine {
+                    val filename = it.substringBefore(' ')
+                    if (filename == "assets.txt") return@forEachLine
+                    assetList.add(Asset(filename, distributionType))
+                }
+                reader.close()
+                assetList
+            } else {
+                cachedAssetList
+            }
         }
     }
 
@@ -132,7 +150,12 @@ class AssetRepository(
         }
 
         val filename = "assets.tar.gz"
-        val versionCode = githubApiClient.getLatestReleaseVersion(repo)
+        val versionCode = try {
+            githubApiClient.getLatestReleaseVersion(repo)
+        } catch (err: UnknownHostException) {
+            //throw SessionStartupException("getLatestReleaseVersion error")
+            return downloadRequirements
+        }
         val url = githubApiClient.getAssetEndpoint(filename, repo)
         val downloadMetadata = DownloadMetadata(filename, repo, versionCode, url)
         downloadRequirements.add(downloadMetadata)
@@ -147,6 +170,9 @@ class AssetRepository(
         val rootFsIsUpToDate = try {
             lastDownloadedFilesystemVersionIsUpToDate(repo)
         } catch (err: UnknownHostException) {
+            throw SessionStartupException("getLatestReleaseVersion error")
+            if (!rootFsIsDownloaded) return downloadRequirements
+
             // Allows usage of existing rootfs files in case of failing network connectivity.
             true
         }

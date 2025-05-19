@@ -20,8 +20,19 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.*
+import android.content.Context
 
 class SettingsFragment : PreferenceFragmentCompat() {
+    private val applicationFilesDirPath by lazy {
+        activity!!.filesDir.path
+    }
+    private val prefs by lazy {
+        context!!.getSharedPreferences("assetLists", Context.MODE_PRIVATE)
+    }
+    private val versionKey = "version"
+    private val rootFsKey = "rootfs"
+    private val lowestPossibleVersion = "v0.0.0"
+    private val filesystemExtractionSuccess = ".success_filesystem_extraction"
 
     private val prootDebugLogger by lazy {
         val ulaFiles = UlaFiles(activity!!, activity!!.applicationInfo.nativeLibraryDir)
@@ -99,6 +110,28 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         screen.addPreference(category1)
         category1.addPreference(termuxproperties)*/
+
+        val latestDownloadVersion = prefs.getString("debian-$versionKey", lowestPossibleVersion) ?: lowestPossibleVersion
+        val latestDownloadVersionPreference: Preference = findPreference("pref_latest_download_version")!!
+        latestDownloadVersionPreference.setSummary(latestDownloadVersion)
+
+        val latestDownloadFilesystemVersion = prefs.getString("debian-$rootFsKey-$versionKey", lowestPossibleVersion) ?: lowestPossibleVersion
+        val latestDownloadFilesystemVersionPreference: Preference = findPreference("pref_latest_download_filesystem_version")!!
+        latestDownloadFilesystemVersionPreference.setSummary(latestDownloadFilesystemVersion)
+
+        val isAssetsExists: Preference = findPreference("pref_is_assets_exists")!!
+        val assetFile = File("$applicationFilesDirPath/busybox")
+        if (assetFile.exists())
+            isAssetsExists.setSummary("出现")
+        else
+            isAssetsExists.setSummary("没有出现")
+        val isRootfsExists: Preference = findPreference("pref_is_rootfs_exists")!!
+        val targetDirectoryName = 0
+        val filesystemExtractionSuccessFile = File("$applicationFilesDirPath/$targetDirectoryName/support/$filesystemExtractionSuccess")
+        if (filesystemExtractionSuccessFile.exists())
+            isRootfsExists.setSummary("出现")
+        else
+            isRootfsExists.setSummary("没有出现")
     }
 
     override fun setDivider(divider: Drawable?) {

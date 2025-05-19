@@ -141,7 +141,7 @@ class AppsStartupFsm(
 
         if (potentialAppFilesystem.isEmpty()) {
             val deviceArchitecture = ulaFiles.getArchType()
-            val fsToInsert = Filesystem(0, name = "apps", archType = deviceArchitecture,
+            val fsToInsert = Filesystem(0, name = "debian", archType = deviceArchitecture,
                     distributionType = app.filesystemRequired, isAppsFilesystem = true)
             filesystemDao.insertFilesystem(fsToInsert)
         }

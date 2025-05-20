@@ -1,5 +1,6 @@
 package tech.ula.model.remote
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import tech.ula.model.entities.App
@@ -12,6 +13,8 @@ import java.io.InputStreamReader
 import java.io.FileInputStream
 import java.util.Locale
 import java.net.SocketTimeoutException
+import java.io.FileNotFoundException
+import java.net.UnknownHostException
 
 class GithubAppsFetcher(
     private val filesDirPath: String,
@@ -26,7 +29,8 @@ class GithubAppsFetcher(
 
     private val branch = "master" // Base off different support branches for testing.
     //private val baseUrl = "https://github.com/CypherpunkArmory/UserLAnd-Assets-Support/raw/$branch/apps"
-    private val baseUrl = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-Support/apps"
+    //private val baseUrl = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-Support/apps"
+    private val baseUrl = "https://gitcode.com/leafcolor/MathLand/releases/download/UserLAnd-Assets-Support-apps"
 
     private var http_state = true;
 
@@ -39,11 +43,16 @@ class GithubAppsFetcher(
             var contents: List<String>;
             try {
                 contents = httpStream.toLines(url)
-            } catch (err: SocketTimeoutException) {
-                val reader = BufferedReader(InputStreamReader(appsInputStream))
-                contents = reader.readLines()
-                reader.close()
-                http_state = false;
+            } catch (err: Exception) {
+                when(err) {
+                    is SocketTimeoutException, is FileNotFoundException, is UnknownHostException -> {
+                        val reader = BufferedReader(InputStreamReader(appsInputStream))
+                        contents = reader.readLines()
+                        reader.close()
+                        http_state = false;
+                    }
+                    else -> throw err
+                }
             }
             contents.drop(numLinesToSkip).map { line ->
                 // Destructure app fields
@@ -68,6 +77,7 @@ class GithubAppsFetcher(
                 )
             }
         } catch (err: Exception) {
+            //Log.e("aaaaa11", err.toString())
             val exception = IOException("Error getting apps list")
             logger.addExceptionBreadcrumb(exception)
             throw exception
@@ -80,7 +90,12 @@ class GithubAppsFetcher(
         val url = "$baseUrl/$directoryAndFilename"
         try {
             if (http_state) httpStream.toFile(url, file)
-        } catch (err: SocketTimeoutException) {
+        } catch (err: Exception) {
+            when(err) {
+                is SocketTimeoutException, is FileNotFoundException, is UnknownHostException -> {
+                }
+                else -> throw err
+            }
         }
     }
 
@@ -90,7 +105,12 @@ class GithubAppsFetcher(
         val file = File("$filesDirPath/apps/$directoryAndFilename")
         try {
             if (http_state) httpStream.toTextFile(url, file)
-        } catch (err: SocketTimeoutException) {
+        } catch (err: Exception) {
+            when(err) {
+                is SocketTimeoutException, is FileNotFoundException, is UnknownHostException -> {
+                }
+                else -> throw err
+            }
         }
     }
 
@@ -100,7 +120,12 @@ class GithubAppsFetcher(
         val file = File("$filesDirPath/apps/$directoryAndFilename")
         try {
             if (http_state) httpStream.toTextFile(url, file)
-        } catch (err: SocketTimeoutException) {
+        } catch (err: Exception) {
+            when(err) {
+                is SocketTimeoutException, is FileNotFoundException, is UnknownHostException -> {
+                }
+                else -> throw err
+            }
         }
     }
 }

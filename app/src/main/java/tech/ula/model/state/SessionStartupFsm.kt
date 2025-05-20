@@ -1,5 +1,6 @@
 package tech.ula.model.state
 
+import android.util.Log
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
@@ -286,6 +287,7 @@ class SessionStartupFsm(
             state.postValue(RemoteUnreachableForGeneration)
             return
         } catch (err: SessionStartupException) {
+            //Log.d("aaaaa11", "ooooooooooooooooooooo")
             state.postValue(killProgressBarState)
             return
         }
@@ -315,7 +317,9 @@ class SessionStartupFsm(
         return when (assetDownloadState) {
             // We don't care if some other app has downloaded something, though we may intercept the
             // broadcast from the Download Manager.
-            is NonUserlandDownloadFound -> {}
+            is NonUserlandDownloadFound -> {
+                state.postValue(killProgressBarState)
+            }
             is CacheSyncAttemptedWhileCacheIsEmpty -> state.postValue(AttemptedCacheAccessWhileEmpty)
             is AllDownloadsCompletedSuccessfully -> state.postValue(DownloadsHaveSucceeded)
             is CompletedDownloadsUpdate -> {
@@ -482,3 +486,4 @@ data class ExtractFilesystem(val filesystem: Filesystem) : SessionStartupEvent()
 object ResetSessionState : SessionStartupEvent()
 
 class SessionStartupException(message: String): Exception(message)
+class QueryLatestReleaseException(message: String): Exception(message)

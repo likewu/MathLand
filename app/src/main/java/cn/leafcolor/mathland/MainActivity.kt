@@ -170,6 +170,7 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
             contributionPrompter.showView()
         }
 
+        //
         handleQWarning()
 
         if (optInPrompter.userHasOptedIn()) {
@@ -630,6 +631,14 @@ class MainActivity : AppCompatActivity(), SessionListFragment.SessionSelection, 
     private fun getCredentials() {
         val dialog = AlertDialog.Builder(this)
         val dialogView = this.layoutInflater.inflate(R.layout.dia_app_credentials, null)
+        val text_input_username = dialogView.findViewById<TextInputEditText>(R.id.text_input_username)
+        val text_input_password = dialogView.findViewById<TextInputEditText>(R.id.text_input_password)
+        val text_input_vnc_password = dialogView.findViewById<TextInputEditText>(R.id.text_input_vnc_password)
+        text_input_password.setTransformationMethod(null)
+        text_input_vnc_password.setTransformationMethod(null)
+        text_input_username.setText("leafcolor")
+        text_input_password.setText("666666")
+        text_input_vnc_password.setText("666666")
         dialog.setView(dialogView)
         dialog.setCancelable(true)
         dialog.setPositiveButton(R.string.button_continue, null)

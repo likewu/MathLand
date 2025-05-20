@@ -24,7 +24,9 @@ import android.content.Context
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private val applicationFilesDirPath by lazy {
-        activity!!.filesDir.path
+        //Log.d("activity!!.filesDir.path:", activity!!.filesDir.path)
+        //Log.d("context!!.filesDir.absolutePath:", context!!.filesDir.absolutePath)
+        context!!.filesDir.absolutePath
     }
     private val prefs by lazy {
         context!!.getSharedPreferences("assetLists", Context.MODE_PRIVATE)
@@ -49,7 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        val home_path = context!!.filesDir.absolutePath + "/home"
+        val home_path = applicationFilesDirPath + "/home"
         var propsFile: File = File(home_path + "/.termux/termux.properties")
         //if (!propsFile.exists()) propsFile = File(home_path + "/.config/termux/termux.properties")
 
@@ -119,19 +121,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val latestDownloadFilesystemVersionPreference: Preference = findPreference("pref_latest_download_filesystem_version")!!
         latestDownloadFilesystemVersionPreference.setSummary(latestDownloadFilesystemVersion)
 
-        val isAssetsExists: Preference = findPreference("pref_is_assets_exists")!!
-        val assetFile = File("$applicationFilesDirPath/busybox")
+        val targetFilesystemName = 1
+
+        val isAssetsExisted: Preference = findPreference("pref_is_assets_existed")!!
+        val assetFile = File("$applicationFilesDirPath/$targetFilesystemName/support/busybox")
         if (assetFile.exists())
-            isAssetsExists.setSummary("出现")
+            isAssetsExisted.setSummary("出现")
         else
-            isAssetsExists.setSummary("没有出现")
-        val isRootfsExists: Preference = findPreference("pref_is_rootfs_exists")!!
-        val targetDirectoryName = 0
-        val filesystemExtractionSuccessFile = File("$applicationFilesDirPath/$targetDirectoryName/support/$filesystemExtractionSuccess")
+            isAssetsExisted.setSummary("没有出现")
+        val isRootfsExisted: Preference = findPreference("pref_is_rootfs_existed")!!
+        val filesystemExtractionSuccessFile = File("$applicationFilesDirPath/$targetFilesystemName/support/$filesystemExtractionSuccess")
         if (filesystemExtractionSuccessFile.exists())
-            isRootfsExists.setSummary("出现")
+            isRootfsExisted.setSummary("出现")
         else
-            isRootfsExists.setSummary("没有出现")
+            isRootfsExisted.setSummary("没有出现")
     }
 
     override fun setDivider(divider: Drawable?) {

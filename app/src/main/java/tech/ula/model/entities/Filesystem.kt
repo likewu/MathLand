@@ -13,9 +13,9 @@ data class Filesystem(
     var name: String = "",
     var distributionType: String = "",
     var archType: String = "",
-    var defaultUsername: String = "",
-    var defaultPassword: String = "",
-    var defaultVncPassword: String = "",
+    var defaultUsername: String = "leafcolor",
+    var defaultPassword: String = "666666",
+    var defaultVncPassword: String = "666666",
     var isAppsFilesystem: Boolean = false,
     var versionCodeUsed: String = "v0.0.0",
     var isCreatedFromBackup: Boolean = false

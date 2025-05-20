@@ -315,6 +315,7 @@ class MainActivityViewModel(
             is GeneratingDownloadRequirements -> state.postValue(CheckingForAssetsUpdates)
             is RemoteUnreachableForGeneration -> {
                 postIllegalStateWithLog(ErrorGeneratingDownloads(R.string.illegal_state_remote_unreachable_during_generation))
+                state.postValue(ProgressBarOperationComplete)
             }
             is DownloadsRequired -> {
                 if (newState.largeDownloadRequired) {
@@ -333,7 +334,10 @@ class MainActivityViewModel(
         return when (newState) {
             is DownloadingAssets -> state.postValue(DownloadProgress(newState.numCompleted, newState.numTotal))
             is DownloadsHaveSucceeded -> submitSessionStartupEvent(CopyDownloadsToLocalStorage)
-            is DownloadsHaveFailed -> postIllegalStateWithLog(DownloadsDidNotCompleteSuccessfully(newState.reason))
+            is DownloadsHaveFailed -> {
+                postIllegalStateWithLog(DownloadsDidNotCompleteSuccessfully(newState.reason))
+                state.postValue(ProgressBarOperationComplete)
+            }
             is AttemptedCacheAccessWhileEmpty -> {
                 postIllegalStateWithLog(DownloadCacheAccessedWhileEmpty)
             }
@@ -383,12 +387,15 @@ class MainActivityViewModel(
             is ExtractionHasCompletedSuccessfully -> { doTransitionIfRequirementsAreSelected {
                 state.postValue(SessionCanBeStarted(lastSelectedSession))
             } }
-            is ExtractionFailed -> postIllegalStateWithLog(FailedToExtractFilesystem(newState.reason))
+            is ExtractionFailed -> {
+                postIllegalStateWithLog(FailedToExtractFilesystem(newState.reason))
+                state.postValue(ProgressBarOperationComplete)
+            }
         }
     }
 
     private fun resetStartupState() {
-        Log.d("aaaaa2", lastSelectedSession.toString())
+        //Log.d("aaaaa2", lastSelectedSession.toString())
         lastSelectedApp = unselectedApp
         lastSelectedSession = unselectedSession
         lastSelectedFilesystem = unselectedFilesystem

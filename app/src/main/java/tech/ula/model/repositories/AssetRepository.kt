@@ -15,6 +15,7 @@ import java.net.UnknownHostException
 import kotlin.Exception
 import android.content.res.AssetManager
 import tech.ula.model.state.SessionStartupException
+import tech.ula.model.state.QueryLatestReleaseException
 
 data class DownloadMetadata(
     val filename: String,
@@ -146,6 +147,8 @@ class AssetRepository(
                 // If assets are present but the network is unreachable, don't bother trying
                 // to find updates.
                 return downloadRequirements
+            } catch (err: QueryLatestReleaseException) {
+                return downloadRequirements
             }
         }
 
@@ -155,7 +158,10 @@ class AssetRepository(
         } catch (err: UnknownHostException) {
             //throw SessionStartupException("getLatestReleaseVersion error")
             return downloadRequirements
+        } catch (err: QueryLatestReleaseException) {
+            "v0.0.0"
         }
+
         val url = githubApiClient.getAssetEndpoint(filename, repo)
         val downloadMetadata = DownloadMetadata(filename, repo, versionCode, url)
         downloadRequirements.add(downloadMetadata)
@@ -170,16 +176,26 @@ class AssetRepository(
         val rootFsIsUpToDate = try {
             lastDownloadedFilesystemVersionIsUpToDate(repo)
         } catch (err: UnknownHostException) {
-            throw SessionStartupException("getLatestReleaseVersion error")
+            //Log.d("aaaaa11", "ppppppppppppppppppppppppppppp")
+            //throw SessionStartupException("getLatestReleaseVersion error")
             if (!rootFsIsDownloaded) return downloadRequirements
 
             // Allows usage of existing rootfs files in case of failing network connectivity.
+            true
+        } catch (err: QueryLatestReleaseException) {
             true
         }
         if (rootFsIsDownloaded && rootFsIsUpToDate) return downloadRequirements
 
         // If the rootfs is not downloaded, network failures will still propagate.
-        val versionCode = githubApiClient.getLatestReleaseVersion(repo)
+        val versionCode = try {
+            githubApiClient.getLatestReleaseVersion(repo)
+        } catch (err: UnknownHostException) {
+            //throw SessionStartupException("getLatestReleaseVersion error")
+            return downloadRequirements
+        } catch (err: QueryLatestReleaseException) {
+            "v0.0.0"
+        }
         val url = githubApiClient.getAssetEndpoint(filename, repo)
         val downloadMetadata = DownloadMetadata(filename, repo, versionCode, url)
         return listOf(downloadMetadata)

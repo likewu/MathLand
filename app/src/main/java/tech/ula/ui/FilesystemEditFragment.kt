@@ -34,6 +34,7 @@ import tech.ula.viewmodel.ImportFailure
 import tech.ula.viewmodel.FilesystemEditViewModel
 import tech.ula.viewmodel.FilesystemEditViewmodelFactory
 import java.util.Locale
+import com.google.android.material.textfield.TextInputLayout
 
 class FilesystemEditFragment : Fragment() {
 
@@ -128,6 +129,9 @@ class FilesystemEditFragment : Fragment() {
         input_filesystem_username.setText(filesystem.defaultUsername)
         input_filesystem_password.setText(filesystem.defaultPassword)
         input_filesystem_vncpassword.setText(filesystem.defaultVncPassword)
+        input_filesystem_password.setTransformationMethod(null)
+        input_filesystem_vncpassword.setTransformationMethod(null)
+        //text_input_layout_filesystem_password.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE)
 
         if (editExisting) {
             input_filesystem_username.isEnabled = false

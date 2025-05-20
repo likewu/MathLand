@@ -49,7 +49,8 @@
             android:padding="8dp"
             android:hint="@string/hint_password"
             app:passwordToggleEnabled="true"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_filesystem_username">
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_filesystem_username"
+            app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_filesystem_password"
@@ -66,7 +67,8 @@
             android:padding="8dp"
             android:hint="@string/hint_vnc_password"
             app:passwordToggleEnabled="true"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_filesystem_password">
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_filesystem_password"
+            app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_filesystem_vncpassword"

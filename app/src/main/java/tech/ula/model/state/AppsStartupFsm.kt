@@ -85,10 +85,10 @@ class AppsStartupFsm(
         val credentialsAreSet = appsFilesystem.defaultUsername.isNotEmpty() &&
                 appsFilesystem.defaultPassword.isNotEmpty() &&
                 appsFilesystem.defaultVncPassword.isNotEmpty()
-        if (credentialsAreSet) {
+        /*if (credentialsAreSet) {
             state.postValue(AppsFilesystemHasCredentials)
             return
-        }
+        }*/
         state.postValue(AppsFilesystemRequiresCredentials(appsFilesystem))
     }
 

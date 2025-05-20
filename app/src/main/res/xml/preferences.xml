@@ -93,14 +93,14 @@
             app:iconSpaceReserved="false"/> -->
         <Preference
             android:enabled="false"
-            android:key="pref_is_assets_exists"
-            android:title="Is Assets Exists"
+            android:key="pref_is_assets_existed"
+            android:title="Is Assets Existed"
             android:summary=""
             app:iconSpaceReserved="false"/>
         <Preference
             android:enabled="false"
-            android:key="pref_is_rootfs_exists"
-            android:title="Is Rootfs Exists"
+            android:key="pref_is_rootfs_existed"
+            android:title="Is Rootfs Existed"
             android:summary=""
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>

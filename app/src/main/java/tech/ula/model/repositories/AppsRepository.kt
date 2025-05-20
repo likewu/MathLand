@@ -1,5 +1,6 @@
 package tech.ula.model.repositories
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.* // ktlint-disable no-wildcard-imports
@@ -50,6 +51,7 @@ class AppsRepository(
                     appsDao.insertApp(app) // Insert the db element last to force observer refresh
             }) }
         } catch (err: Exception) {
+            //Log.e("aaaaa11", err.toString())
             refreshStatus.postValue(RefreshStatus.FAILED)
             val message = err.message ?: "Not found"
             val breadcrumb = UlaBreadcrumb(className, BreadcrumbType.RuntimeError, message)

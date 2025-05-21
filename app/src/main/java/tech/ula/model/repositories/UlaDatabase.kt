@@ -53,6 +53,7 @@ abstract class UlaDatabase : RoomDatabase() {
                                 GlobalScope.launch { getInstance(context).sessionDao().resetSessionActivity() }
                             }
                         })
+                        .allowMainThreadQueries()
                         .build()
     }
 }

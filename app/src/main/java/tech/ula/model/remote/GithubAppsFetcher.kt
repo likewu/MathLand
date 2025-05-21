@@ -30,7 +30,8 @@ class GithubAppsFetcher(
     private val branch = "master" // Base off different support branches for testing.
     //private val baseUrl = "https://github.com/CypherpunkArmory/UserLAnd-Assets-Support/raw/$branch/apps"
     //private val baseUrl = "https://gitlab.com/leafcolor/packages/-/raw/master/UserLAnd-Assets-Support/apps"
-    private val baseUrl = "https://gitcode.com/leafcolor/MathLand/releases/download/UserLAnd-Assets-Support-apps"
+    private val baseUrl = "https://not.gitcode.com/leafcolor/MathLand/tree/main/UserLAnd-Assets-Support/apps"
+    //https://raw.gitcode.com/leafcolor/MathLand/archive/refs/heads/main.zip?path=UserLAnd-Assets-Support/apps
 
     private var http_state = true;
 

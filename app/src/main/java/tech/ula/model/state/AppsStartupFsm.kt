@@ -58,7 +58,7 @@ class AppsStartupFsm(
         }
         return@launch when (event) {
             is AppSelected -> fetchDatabaseEntries(event.app)
-            is CheckAppsFilesystemCredentials -> checkAppsFilesystemCredentials(event.appsFilesystem)
+            is CheckAppsFilesystemCredentials -> checkAppsFilesystemCredentials(event.appName, event.appsFilesystem)
             is SubmitAppsFilesystemCredentials -> {
                 setAppsFilesystemCredentials(event.filesystem, event.username, event.password, event.vncPassword)
             }
@@ -81,14 +81,16 @@ class AppsStartupFsm(
         }
     }
 
-    private fun checkAppsFilesystemCredentials(appsFilesystem: Filesystem) {
+    private fun checkAppsFilesystemCredentials(appName: String, appsFilesystem: Filesystem) {
+        val sessions = sessionDao.findAppsSession(appName)
         val credentialsAreSet = appsFilesystem.defaultUsername.isNotEmpty() &&
                 appsFilesystem.defaultPassword.isNotEmpty() &&
-                appsFilesystem.defaultVncPassword.isNotEmpty()
-        /*if (credentialsAreSet) {
+                appsFilesystem.defaultVncPassword.isNotEmpty() &&
+                !sessions.isEmpty() && sessions.first().filesystemId == appsFilesystem.id && sessions.first().serviceType != ServiceType.Unselected //!findAppSession2(appName).isEmpty()
+        if (credentialsAreSet) {
             state.postValue(AppsFilesystemHasCredentials)
             return
-        }*/
+        }
         state.postValue(AppsFilesystemRequiresCredentials(appsFilesystem))
     }
 
@@ -161,6 +163,10 @@ class AppsStartupFsm(
         return@withContext sessionDao.findAppsSession(app.name).first()
     }
 
+    private suspend fun findAppSession2(appName: String): List<Session> = withContext(Dispatchers.IO) {
+        return@withContext sessionDao.findAppsSession(appName)
+    }
+
     private suspend fun setAppsFilesystemCredentials(filesystem: Filesystem, username: String, password: String, vncPassword: String) {
         filesystem.defaultUsername = username
         filesystem.defaultPassword = password
@@ -200,7 +206,7 @@ data class AppDatabaseEntriesSynced(val app: App, val session: Session, val file
 
 sealed class AppsStartupEvent
 data class AppSelected(val app: App) : AppsStartupEvent()
-data class CheckAppsFilesystemCredentials(val appsFilesystem: Filesystem) : AppsStartupEvent()
+data class CheckAppsFilesystemCredentials(val appName: String, val appsFilesystem: Filesystem) : AppsStartupEvent()
 data class SubmitAppsFilesystemCredentials(val filesystem: Filesystem, val username: String, val password: String, val vncPassword: String) : AppsStartupEvent()
 data class CheckAppSessionServiceType(val appSession: Session) : AppsStartupEvent()
 data class SubmitAppSessionServiceType(val appSession: Session, val serviceType: ServiceType) : AppsStartupEvent()

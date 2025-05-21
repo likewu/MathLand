@@ -212,7 +212,7 @@ class MainActivityViewModel(
             is WaitingForAppSelection -> {}
             is FetchingDatabaseEntries -> {}
             is DatabaseEntriesFetched -> {
-                submitAppsStartupEvent(CheckAppsFilesystemCredentials(lastSelectedFilesystem))
+                submitAppsStartupEvent(CheckAppsFilesystemCredentials(newState.appSession.name, lastSelectedFilesystem))
             }
             is DatabaseEntriesFetchFailed -> {
                 postIllegalStateWithLog(ErrorFetchingAppDatabaseEntries)

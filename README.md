@@ -1,6 +1,4 @@
-![UserLAnd Feature Graphic](https://raw.githubusercontent.com/CypherpunkArmory/UserLAnd/master/fastlane/metadata/android/en-US/images/featureGraphic.png)
-
-# Welcome to UserLAnd
+# Welcome to MathLAnd
 
 The easiest way to run a Linux distribution or application on Android.   
 Features: 
@@ -21,12 +19,12 @@ You can see our templates by visiting our [issue center](https://github.com/like
 ## Want to contribute?
 See our [CONTRIBUTING](https://github.com/likewu/MathLand/blob/master/CONTRIBUTING.md) document.
 
-## Start using UserLAnd
-See our [Getting Started](https://github.com/likewu/MathLand/wiki/Getting-Started-in-UserLAnd) page.
+## Start using MathLAnd
+See our [Getting Started](https://github.com/likewu/MathLand/wiki/Getting-Started-in-MathLAnd) page.
 
-## UserLAnd assets
-The assets that UserLAnd depends on and the scripts that build them are contained in other repositories.  
+## MathLAnd assets
+The assets that MathLAnd depends on and the scripts that build them are contained in other repositories.  
 
-The common assets that are used for all distros and application are found at [CypherpunkArmory/UserLAnd-Assets-Support](https://github.com/CypherpunkArmory/UserLAnd-Assets-Support).  
+The common assets that are used for all distros and application are found at [CypherpunkArmory/MathLAnd-Assets-Support](https://github.com/CypherpunkArmory/MathLAnd-Assets-Support).  
 
-Distribution or application specific assets are found under CypherpunkArmory/UserLAnd-Assets-(__Distribution/App__). For example, our Debian specific assets can be found at [CypherpunkArmory/UserLAnd-Assets-Debian](https://github.com/CypherpunkArmory/UserLAnd-Assets-Debian)
+Distribution or application specific assets are found under CypherpunkArmory/MathLAnd-Assets-(__Distribution/App__). For example, our Debian specific assets can be found at [CypherpunkArmory/MathLAnd-Assets-Debian](https://github.com/CypherpunkArmory/MathLAnd-Assets-Debian)
